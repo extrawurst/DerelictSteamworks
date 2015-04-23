@@ -55,9 +55,9 @@ private
     static if(Derelict_OS_Windows)
         enum libNames = "steam_api.dll";    
     else static if (Derelict_OS_Mac)
-        enum libNames = "libcsteamworks.dylib";
+        enum libNames = "libsteam_api.dylib";
     else static if (Derelict_OS_Linux)
-        enum libNames = "libcsteamworks.so";
+        enum libNames = "libsteam_api.so";
     else
         static assert(0, "Need to implement imgui libNames for this operating system.");
 }
