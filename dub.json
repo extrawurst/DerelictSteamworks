@@ -1,0 +1,16 @@
+{
+    "name": "derelict-steamworks",
+    "description": "Dynamic bindings to the Steamworks SDK for the D programming language",
+    "homepage": "",
+    "license": "MIT",
+    "authors": [
+        "Stephan Dilly"
+    ],
+
+    "targetName": "DerelictSteamworks",
+    "targetPath": "lib",
+
+    "dependencies": {
+        "derelict-util": "~>1.9.1"
+    }
+}
