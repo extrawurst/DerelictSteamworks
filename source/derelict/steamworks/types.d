@@ -34,10 +34,12 @@ module derelict.steamworks.types;
 import derelict.util.system;
 
 alias int32 = int;
+alias uint64 = ulong;
 
 alias HSteamPipe = int32;
 alias HSteamUser = int32;
 alias HAuthTicket = uint32;
+alias SteamAPICall_t = uint64;
 
 alias AppId_t= uint32;
 
@@ -67,6 +69,12 @@ enum EBeginAuthSessionResult
     k_EBeginAuthSessionResultInvalidVersion = 3,            // Ticket is from an incompatible interface version
     k_EBeginAuthSessionResultGameMismatch = 4,              // Ticket is not for this game
     k_EBeginAuthSessionResultExpiredTicket = 5,             // Ticket has expired
+}
+enum EUserHasLicenseForAppResult
+{
+    k_EUserHasLicenseResultHasLicense = 0,
+    k_EUserHasLicenseResultDoesNotHaveLicense = 1,
+    k_EUserHasLicenseResultNoAuth = 2,
 }
 
 extern(C++) interface CSteamID{}
@@ -131,7 +139,7 @@ extern(C++) interface ISteamUser
     // levels of speech are detected.
     // nUncompressedVoiceDesiredSampleRate is necessary to know the number of bytes to return in pcbUncompressed - can be set to 0 if you don't need uncompressed (the usual case)
     // If you're upgrading from an older Steamworks API, you'll want to pass in 11025 to nUncompressedVoiceDesiredSampleRate
-    EVoiceResult GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate ) = 0;
+    EVoiceResult GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate );
     
     // Gets the latest voice data from the microphone. Compressed data is an arbitrary format, and is meant to be handed back to 
     // DecompressVoice() for playback later as a binary blob. Uncompressed data is 16-bit, signed integer, 11025Hz PCM format.
@@ -144,7 +152,7 @@ extern(C++) interface ISteamUser
     // Matching data that is not read during this call will be thrown away.
     // GetAvailableVoice() can be used to determine how much data is actually available.
     // If you're upgrading from an older Steamworks API, you'll want to pass in 11025 to nUncompressedVoiceDesiredSampleRate
-    EVoiceResult GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten, uint32 nUncompressedVoiceDesiredSampleRate ) = 0;
+    EVoiceResult GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten, uint32 nUncompressedVoiceDesiredSampleRate );
     
     // Decompresses a chunk of compressed data produced by GetVoice().
     // nBytesWritten is set to the number of bytes written to pDestBuffer unless the return value is k_EVoiceResultBufferTooSmall.
@@ -152,53 +160,53 @@ extern(C++) interface ISteamUser
     // data. The suggested buffer size for the destination buffer is 22 kilobytes.
     // The output format of the data is 16-bit signed at the requested samples per second.
     // If you're upgrading from an older Steamworks API, you'll want to pass in 11025 to nDesiredSampleRate
-    EVoiceResult DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, uint32 nDesiredSampleRate ) = 0;
+    EVoiceResult DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, uint32 nDesiredSampleRate );
     
     // This returns the frequency of the voice data as it's stored internally; calling DecompressVoice() with this size will yield the best results
-    uint32 GetVoiceOptimalSampleRate() = 0;
+    uint32 GetVoiceOptimalSampleRate();
     
     // Retrieve ticket to be sent to the entity who wishes to authenticate you. 
     // pcbTicket retrieves the length of the actual ticket.
-    HAuthTicket GetAuthSessionTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket ) = 0;
+    HAuthTicket GetAuthSessionTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket );
     
     // Authenticate ticket from entity steamID to be sure it is valid and isnt reused
     // Registers for callbacks if the entity goes offline or cancels the ticket ( see ValidateAuthTicketResponse_t callback and EAuthSessionResponse )
-    EBeginAuthSessionResult BeginAuthSession( const void *pAuthTicket, int cbAuthTicket, CSteamID steamID ) = 0;
+    EBeginAuthSessionResult BeginAuthSession( const void *pAuthTicket, int cbAuthTicket, CSteamID steamID );
     
     // Stop tracking started by BeginAuthSession - called when no longer playing game with this entity
-    void EndAuthSession( CSteamID steamID ) = 0;
-    
+    void EndAuthSession( CSteamID steamID );
+
     // Cancel auth ticket from GetAuthSessionTicket, called when no longer playing game with the entity you gave the ticket to
-    void CancelAuthTicket( HAuthTicket hAuthTicket ) = 0;
+    void CancelAuthTicket( HAuthTicket hAuthTicket );
     
     // After receiving a user's authentication data, and passing it to BeginAuthSession, use this function
     // to determine if the user owns downloadable content specified by the provided AppID.
-    EUserHasLicenseForAppResult UserHasLicenseForApp( CSteamID steamID, AppId_t appID ) = 0;
+    EUserHasLicenseForAppResult UserHasLicenseForApp( CSteamID steamID, AppId_t appID );
     
     // returns true if this users looks like they are behind a NAT device. Only valid once the user has connected to steam 
     // (i.e a SteamServersConnected_t has been issued) and may not catch all forms of NAT.
-    bool BIsBehindNAT() = 0;
+    bool BIsBehindNAT();
     
     // set data to be replicated to friends so that they can join your game
     // CSteamID steamIDGameServer - the steamID of the game server, received from the game server by the client
     // uint32 unIPServer, uint16 usPortServer - the IP address of the game server
-    void AdvertiseGame( CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer ) = 0;
+    void AdvertiseGame( CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer );
     
     // Requests a ticket encrypted with an app specific shared key
     // pDataToInclude, cbDataToInclude will be encrypted into the ticket
     // ( This is asynchronous, you must wait for the ticket to be completed by the server )
-    SteamAPICall_t RequestEncryptedAppTicket( void *pDataToInclude, int cbDataToInclude ) = 0;
-    
+    SteamAPICall_t RequestEncryptedAppTicket( void *pDataToInclude, int cbDataToInclude );
+
     // retrieve a finished ticket
-    bool GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket ) = 0;
+    bool GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket );
     
     // Trading Card badges data access
     // if you only have one set of cards, the series will be 1
     // the user has can have two different badges for a series; the regular (max level 5) and the foil (max level 1)
-    int GetGameBadgeLevel( int nSeries, bool bFoil ) = 0;
+    int GetGameBadgeLevel( int nSeries, bool bFoil );
     
     // gets the Steam Level of the user, as shown on their profile
-    int GetPlayerSteamLevel() = 0;
+    int GetPlayerSteamLevel();
     
     // Requests a URL which authenticates an in-game browser for store check-out,
     // and then redirects to the specified URL. As long as the in-game browser
@@ -210,7 +218,7 @@ extern(C++) interface ISteamUser
     // or else immediately navigate to the result URL using a hidden browser window.
     // NOTE 2: The resulting authorization cookie has an expiration time of one day,
     // so it would be a good idea to request and visit a new auth URL every 12 hours.
-    SteamAPICall_t RequestStoreAuthURL( const char *pchRedirectURL ) = 0;
+    SteamAPICall_t RequestStoreAuthURL( const char *pchRedirectURL );
     
 version(_PS3){
     // Initiates PS3 Logon request using just PSN ticket.  

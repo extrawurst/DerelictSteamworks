@@ -42,7 +42,7 @@ extern(C) @nogc nothrow
     alias da_SteamAPI_Init = bool function();
     alias da_SteamAPI_Shutdown = void function();
     alias da_SteamAPI_IsSteamRunning = bool function();
-    alias da_SteamUser = ISteamUser* function();
+    alias da_SteamUser = ISteamUser function();
 }
 
 __gshared

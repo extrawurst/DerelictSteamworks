@@ -8,6 +8,8 @@ void main()
 
     DerelictSteamworks.load();
 
+    writefln("steam running: %s",SteamAPI_IsSteamRunning());
+
     auto res = SteamAPI_Init();
 
     writefln("steam loaded: %s",res);
@@ -15,7 +17,7 @@ void main()
     auto usr = SteamUser();
     writefln("steam usr: %s",usr);
 
-    writefln("steam running: %s",SteamAPI_IsSteamRunning());
+    writefln("steam usr loggedIn: %s",usr.BLoggedOn());
 
     SteamAPI_Shutdown();
 
