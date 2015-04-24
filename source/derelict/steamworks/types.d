@@ -123,12 +123,28 @@ enum EFriendRelationship
     // keep this updated
     k_EFriendRelationshipMax = 8,
 }
-
 enum EOverlayToStoreFlag
 {
     k_EOverlayToStoreFlag_None = 0,
     k_EOverlayToStoreFlag_AddToCart = 1,
     k_EOverlayToStoreFlag_AddToCartAndShow = 2,
+}
+enum EFriendFlags
+{
+    k_EFriendFlagNone           = 0x00,
+    k_EFriendFlagBlocked        = 0x01,
+    k_EFriendFlagFriendshipRequested    = 0x02,
+    k_EFriendFlagImmediate      = 0x04,         // "regular" friend
+    k_EFriendFlagClanMember     = 0x08,
+    k_EFriendFlagOnGameServer   = 0x10, 
+    // k_EFriendFlagHasPlayedWith   = 0x20, // not currently used
+    // k_EFriendFlagFriendOfFriend  = 0x40, // not currently used
+    k_EFriendFlagRequestingFriendship = 0x80,
+    k_EFriendFlagRequestingInfo = 0x100,
+    k_EFriendFlagIgnored        = 0x200,
+    k_EFriendFlagIgnoredFriend  = 0x400,
+    k_EFriendFlagSuggested      = 0x800,
+    k_EFriendFlagAll            = 0xFFFF,
 };
 
 align(1)struct FriendGameInfo_t
@@ -345,7 +361,7 @@ extern(C++) interface ISteamFriends
     // friend iteration
     // takes a set of k_EFriendFlags, and returns the number of users the client knows about who meet that criteria
     // then GetFriendByIndex() can then be used to return the id's of each of those users
-    int GetFriendCount( int iFriendFlags );
+    int GetFriendCount( EFriendFlags iFriendFlags );
     
     // returns the steamID of a user
     // iFriend is a index of range [0, GetFriendCount())
