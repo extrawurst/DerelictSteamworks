@@ -32,7 +32,7 @@ extern(C++) interface ISteamFriends
     // iFriend is a index of range [0, GetFriendCount())
     // iFriendsFlags must be the same value as used in GetFriendCount()
     // the returned CSteamID can then be used by all the functions below to access details about the user
-    CSteamID GetFriendByIndex( int iFriend, int iFriendFlags );
+    deprecated("crashes, please use: SteamAPI_ISteamFriends_GetFriendByIndex") CSteamID GetFriendByIndex( int iFriend, int iFriendFlags );
     
     // returns a relationship to a user
     EFriendRelationship GetFriendRelationship( CSteamID steamIDFriend );
@@ -45,7 +45,7 @@ extern(C++) interface ISteamFriends
     // same rules as GetFriendPersonaState() apply as to whether or not the user knowns the name of the other user
     // note that on first joining a lobby, chat room or game server the local user will not known the name of the other users automatically; that information will arrive asyncronously
     // 
-    const char *GetFriendPersonaName( CSteamID steamIDFriend );
+    deprecated("crashes, please use: SteamAPI_ISteamFriends_GetFriendPersonaName") const char *GetFriendPersonaName( CSteamID steamIDFriend );
     
     // returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
     bool GetFriendGamePlayed( CSteamID steamIDFriend, /+OUT_STRUCT()+/ FriendGameInfo_t *pFriendGameInfo );

@@ -46,6 +46,9 @@ extern(C) @nogc nothrow
     alias da_SteamUser = ISteamUser function();
     alias da_SteamFriends = ISteamFriends function();
     alias da_SteamUtils = ISteamUtils function();
+
+    alias da_SteamAPI_ISteamFriends_GetFriendByIndex = uint64 function(intptr_t instancePtr, int iFriend, int iFriendFlags);
+    alias da_SteamAPI_ISteamFriends_GetFriendPersonaName = const char * function(intptr_t instancePtr, CSteamID steamIDFriend);
 }
 
 __gshared
@@ -56,4 +59,7 @@ __gshared
     da_SteamUser SteamUser;
     da_SteamFriends SteamFriends;
     da_SteamUtils SteamUtils;
+
+    da_SteamAPI_ISteamFriends_GetFriendByIndex SteamAPI_ISteamFriends_GetFriendByIndex;
+    da_SteamAPI_ISteamFriends_GetFriendPersonaName SteamAPI_ISteamFriends_GetFriendPersonaName;
 }

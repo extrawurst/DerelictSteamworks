@@ -40,6 +40,8 @@ alias uint16 = ushort;
 alias uint32 = uint;
 alias uint8 = ubyte;
 
+alias intptr_t = void*;
+
 alias HSteamPipe = int32;
 alias HSteamUser = int32;
 alias HAuthTicket = uint32;
@@ -206,6 +208,7 @@ align(1)struct FriendGameInfo_t
     CSteamID m_steamIDLobby;
 };
 
-extern(C++) interface CSteamID{}
+alias CSteamID = uint64;
+//align(1)struct CSteamID{uint64 dat;}
 extern(C++) interface CGameID{}
 

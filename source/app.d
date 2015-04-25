@@ -60,17 +60,19 @@ void main()
         writefln("friends cnt: %s",friendCnt);
         foreach(i; 0..friendCnt)
         {
-            auto steamId = friends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagAll);
+            auto steamId = SteamAPI_ISteamFriends_GetFriendByIndex(cast(void*)friends, i, EFriendFlags.k_EFriendFlagAll);
 
-            auto friendRelation = friends.GetFriendRelationship(steamId);
+            auto nick = SteamAPI_ISteamFriends_GetFriendPersonaName(cast(void*)friends,steamId);
+
+            /+auto friendRelation = friends.GetFriendRelationship(steamId);
 
             auto personState = friends.GetFriendPersonaState(steamId);
 
             auto level = friends.GetFriendSteamLevel(steamId);
 
-            auto nick = friends.GetPlayerNickname(steamId);
+            writefln("friends [%s]: %s,%s,%s,%s,'%s'",i, to!string(friends.GetFriendPersonaName(steamId)), friendRelation, personState, level, nick);+/
 
-            writefln("friends [%s]: %s,%s,%s,%s,'%s'",i, to!string(friends.GetFriendPersonaName(steamId)), friendRelation, personState, level, nick);
+            writefln("friends [%s]: %s",i, to!string(nick));
         }
     }
 
