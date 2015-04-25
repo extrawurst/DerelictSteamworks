@@ -40,7 +40,6 @@ void main()
 
         {
             auto usr = SteamUser();
-            writefln("steam usr: %s",usr);
 
             writefln("steam usr loggedIn: %s",usr.BLoggedOn());
 
