@@ -45,7 +45,13 @@ private
     version(darwin)
         version = MacOSX;
     version(OSX)
+    {
         version = MacOSX;
+    }
+    else
+    {
+        version = NotOSX;
+    }
 }
 
 private
@@ -76,8 +82,16 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamFriends, "SteamFriends");
             bindFunc(cast(void**)&SteamUtils, "SteamUtils");
 
-            bindFunc(cast(void**)&SteamAPI_ISteamFriends_GetFriendByIndex, "SteamAPI_ISteamFriends_GetFriendByIndex");
-            bindFunc(cast(void**)&SteamAPI_ISteamFriends_GetFriendPersonaName, "SteamAPI_ISteamFriends_GetFriendPersonaName");
+            version(NotOSX){
+                bindFunc(cast(void**)&SteamAPI_ISteamFriends_GetFriendByIndex, "SteamAPI_ISteamFriends_GetFriendByIndex");
+                bindFunc(cast(void**)&SteamAPI_ISteamFriends_GetFriendPersonaName, "SteamAPI_ISteamFriends_GetFriendPersonaName");
+            }
+            else
+            {
+                import derelict.steamworks.osxHelpers;
+                SteamAPI_ISteamFriends_GetFriendByIndex = &osx_SteamAPI_ISteamFriends_GetFriendByIndex;
+                SteamAPI_ISteamFriends_GetFriendPersonaName = &osx_SteamAPI_ISteamFriends_GetFriendPersonaName;
+            }
         }
     }
 

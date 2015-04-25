@@ -4,6 +4,7 @@ import derelict.steamworks.types;
 
 extern(C++) interface ISteamFriends
 {
+    @nogc nothrow:
     // returns the local players name - guaranteed to not be NULL.
     // this is the same name as on the users community profile page
     // this is stored in UTF-8 format
@@ -32,7 +33,11 @@ extern(C++) interface ISteamFriends
     // iFriend is a index of range [0, GetFriendCount())
     // iFriendsFlags must be the same value as used in GetFriendCount()
     // the returned CSteamID can then be used by all the functions below to access details about the user
-    deprecated("crashes, please use: SteamAPI_ISteamFriends_GetFriendByIndex") CSteamID GetFriendByIndex( int iFriend, int iFriendFlags );
+    version(OSX)
+        CSteamID GetFriendByIndex( int iFriend, int iFriendFlags );
+    else
+        deprecated("crashes, please use: SteamAPI_ISteamFriends_GetFriendByIndex")
+        CSteamID GetFriendByIndex( int iFriend, int iFriendFlags );
     
     // returns a relationship to a user
     EFriendRelationship GetFriendRelationship( CSteamID steamIDFriend );
@@ -44,8 +49,11 @@ extern(C++) interface ISteamFriends
     // returns the name another user - guaranteed to not be NULL.
     // same rules as GetFriendPersonaState() apply as to whether or not the user knowns the name of the other user
     // note that on first joining a lobby, chat room or game server the local user will not known the name of the other users automatically; that information will arrive asyncronously
-    // 
-    deprecated("crashes, please use: SteamAPI_ISteamFriends_GetFriendPersonaName") const char *GetFriendPersonaName( CSteamID steamIDFriend );
+    version(OSX)
+        const(char)* GetFriendPersonaName( CSteamID steamIDFriend );
+    else
+        deprecated("crashes, please use: SteamAPI_ISteamFriends_GetFriendPersonaName") 
+        const(char)* GetFriendPersonaName( CSteamID steamIDFriend );
     
     // returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
     bool GetFriendGamePlayed( CSteamID steamIDFriend, /+OUT_STRUCT()+/ FriendGameInfo_t *pFriendGameInfo );
@@ -55,7 +63,11 @@ extern(C++) interface ISteamFriends
     int GetFriendSteamLevel( CSteamID steamIDFriend );
     
     // Returns nickname the current user has set for the specified player. Returns NULL if the no nickname has been set for that player.
-    const char* GetPlayerNickname( CSteamID steamIDPlayer );
+    version(OSX)
+        const char* GetPlayerNickname( CSteamID steamIDPlayer );
+    else
+        deprecated("crashes, please use: SteamAPI_ISteamFriends_GetPlayerNickname") 
+        const char* GetPlayerNickname( CSteamID steamIDPlayer );
     
     // friend grouping (tag) apis
     // returns the number of friends groups

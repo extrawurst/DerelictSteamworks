@@ -38,7 +38,7 @@ private
     import derelict.steamworks.interfaces;
 }
 
-extern(C) @nogc nothrow
+@nogc nothrow extern(C)
 {
     alias da_SteamAPI_Init = bool function();
     alias da_SteamAPI_Shutdown = void function();
@@ -48,7 +48,7 @@ extern(C) @nogc nothrow
     alias da_SteamUtils = ISteamUtils function();
 
     alias da_SteamAPI_ISteamFriends_GetFriendByIndex = uint64 function(intptr_t instancePtr, int iFriend, int iFriendFlags);
-    alias da_SteamAPI_ISteamFriends_GetFriendPersonaName = const char * function(intptr_t instancePtr, CSteamID steamIDFriend);
+    alias da_SteamAPI_ISteamFriends_GetFriendPersonaName = const(char)* function(intptr_t instancePtr, CSteamID steamIDFriend);
 }
 
 __gshared
