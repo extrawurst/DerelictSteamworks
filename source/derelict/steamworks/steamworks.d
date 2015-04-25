@@ -73,6 +73,7 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_IsSteamRunning, "SteamAPI_IsSteamRunning");
             bindFunc(cast(void**)&SteamUser, "SteamUser");
             bindFunc(cast(void**)&SteamFriends, "SteamFriends");
+            bindFunc(cast(void**)&SteamUtils, "SteamUtils");
         }
     }
 

@@ -3,6 +3,12 @@ import std.conv;
 
 import derelict.steamworks.steamworks;
 
+nothrow extern(C) void warnCallback(int severity, const char * str)
+{
+    try writefln("WARN: %s",str);
+    catch{}
+}
+
 void main()
 {
 	writeln("startup");
@@ -16,17 +22,35 @@ void main()
     {
         writefln("steam loaded: %s",res);
 
-        auto usr = SteamUser();
-        writefln("steam usr: %s",usr);
+        {
+            auto utils = SteamUtils();
+            
+            utils.SetWarningMessageHook(&warnCallback);
 
-        writefln("steam usr loggedIn: %s",usr.BLoggedOn());
+            writefln("seconds since start: %s(%s)",utils.GetSecondsSinceComputerActive(),utils.GetSecondsSinceAppActive());
+            
+            writefln("servertime: %s",utils.GetServerRealTime());
+            
+            writefln("country: %s",to!string(utils.GetIPCountry()));
+            
+            writefln("battery: %s",utils.GetCurrentBatteryPower());
 
-        char[256] buff;
-        res = usr.GetUserDataFolder(buff.ptr, 256);
-        import std.c.string:strlen;
-        writefln("steam usr path: (%s) '%s'",res,buff[0..strlen(buff.ptr)]);
+            writefln("universe: %s",utils.GetConnectedUniverse());
+        }
 
-        writefln("steam usr steamlevel: %s",usr.GetPlayerSteamLevel());
+        {
+            auto usr = SteamUser();
+            writefln("steam usr: %s",usr);
+
+            writefln("steam usr loggedIn: %s",usr.BLoggedOn());
+
+            char[256] buff;
+            res = usr.GetUserDataFolder(buff.ptr, 256);
+            import std.c.string:strlen;
+            writefln("steam usr path: (%s) '%s'",res,buff[0..strlen(buff.ptr)]);
+
+            writefln("steam usr steamlevel: %s",usr.GetPlayerSteamLevel());
+        }
 
         auto friends = SteamFriends();
         writefln("name: %s",to!string(friends.GetPersonaName()));

@@ -44,6 +44,7 @@ extern(C) @nogc nothrow
     alias da_SteamAPI_IsSteamRunning = bool function();
     alias da_SteamUser = ISteamUser function();
     alias da_SteamFriends = ISteamFriends function();
+    alias da_SteamUtils = ISteamUtils function();
 }
 
 __gshared
@@ -53,4 +54,5 @@ __gshared
     da_SteamAPI_IsSteamRunning SteamAPI_IsSteamRunning;
     da_SteamUser SteamUser;
     da_SteamFriends SteamFriends;
+    da_SteamUtils SteamUtils;
 }
