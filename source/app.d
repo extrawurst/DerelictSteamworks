@@ -30,6 +30,8 @@ void main()
 
         auto friends = SteamFriends();
         writefln("name: %s",to!string(friends.GetPersonaName()));
+        auto state = friends.GetPersonaState();
+        writefln("state: %s",state);
 
         auto friendCnt = friends.GetFriendCount(EFriendFlags.k_EFriendFlagAll);
         writefln("friends cnt: %s",friendCnt);
@@ -37,7 +39,15 @@ void main()
         {
             auto steamId = friends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagAll);
 
-            writefln("friends [%s]: %s",i, to!string(friends.GetFriendPersonaName(steamId)));
+            auto friendRelation = friends.GetFriendRelationship(steamId);
+
+            auto personState = friends.GetFriendPersonaState(steamId);
+
+            auto level = friends.GetFriendSteamLevel(steamId);
+
+            auto nick = friends.GetPlayerNickname(steamId);
+
+            writefln("friends [%s]: %s,%s,%s,%s,'%s'",i, to!string(friends.GetFriendPersonaName(steamId)), friendRelation, personState, level, nick);
         }
     }
 

@@ -390,7 +390,7 @@ extern(C++) interface ISteamFriends
     int GetFriendSteamLevel( CSteamID steamIDFriend );
     
     // Returns nickname the current user has set for the specified player. Returns NULL if the no nickname has been set for that player.
-    const char *GetPlayerNickname( CSteamID steamIDPlayer );
+    const char* GetPlayerNickname( CSteamID steamIDPlayer );
     
     // friend grouping (tag) apis
     // returns the number of friends groups
