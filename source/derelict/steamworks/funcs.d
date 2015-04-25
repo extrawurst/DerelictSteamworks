@@ -35,6 +35,7 @@ private
 {
     import derelict.util.system;
     import derelict.steamworks.types;
+    import derelict.steamworks.interfaces;
 }
 
 extern(C) @nogc nothrow
