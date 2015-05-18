@@ -1,0 +1,3 @@
+[submodule "steamworks-api-gen"]
+	path = steamworks-api-gen
+	url = https://github.com/Extrawurst/steamworks-api-gen.git
