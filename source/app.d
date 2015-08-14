@@ -31,7 +31,7 @@ void main()
         assert(pipe != 0);
 
         {
-            auto utils = SteamAPI_ISteamClient_GetISteamUtils(client, pipe, "");
+            auto utils = SteamAPI_ISteamClient_GetISteamUtils(client, pipe, "SteamUtils007");
 
             assert(utils);
             
@@ -49,25 +49,25 @@ void main()
             +/
         }
 
-        //{
+        {
             auto usrPipe = SteamAPI_ISteamClient_ConnectToGlobalUser(client, pipe);
 
             assert(usrPipe);
 
-            auto usr = SteamAPI_ISteamClient_GetISteamUser(client, usrPipe, pipe, "");
-
+            auto usr = SteamAPI_ISteamClient_GetISteamUser(client, usrPipe, pipe, "SteamUser018");
+        
             assert(usr);
 
             writefln("steam usr loggedIn: %s",SteamAPI_ISteamUser_BLoggedOn(usr));
-            /+
+
             char[256] buff;
-            res = usr.GetUserDataFolder(buff.ptr, 256);
+            res = SteamAPI_ISteamUser_GetUserDataFolder(usr,buff.ptr, 256);
             import std.c.string:strlen;
             writefln("steam usr path: (%s) '%s'",res,buff[0..strlen(buff.ptr)]);
 
-            writefln("steam usr steamlevel: %s",usr.GetPlayerSteamLevel());
+            writefln("steam usr steamlevel: %s",SteamAPI_ISteamUser_GetPlayerSteamLevel(usr));
         }
-
+        /+
         auto friends = SteamFriends();
         writefln("name: %s",to!string(friends.GetPersonaName()));
         auto state = friends.GetPersonaState();
