@@ -37,16 +37,15 @@ void main()
             
             //utils.SetWarningMessageHook(&warnCallback);
 
-            //writefln("seconds since start: %s(%s)",utils.GetSecondsSinceComputerActive(),utils.GetSecondsSinceAppActive());
+            writefln("seconds since start: %s(%s)",SteamAPI_ISteamUtils_GetSecondsSinceComputerActive(utils), SteamAPI_ISteamUtils_GetSecondsSinceAppActive(utils));
             
             writefln("servertime: %s",SteamAPI_ISteamUtils_GetServerRealTime(utils));
 
-            /+writefln("country: %s",to!string(utils.GetIPCountry()));
+            writefln("country: %s",to!string(SteamAPI_ISteamUtils_GetIPCountry(utils)));
             
-            writefln("battery: %s",utils.GetCurrentBatteryPower());
+            writefln("battery: %s",SteamAPI_ISteamUtils_GetCurrentBatteryPower(utils));
 
-            writefln("universe: %s",utils.GetConnectedUniverse());
-            +/
+            writefln("universe: %s",SteamAPI_ISteamUtils_GetConnectedUniverse(utils));
         }
 
         {
