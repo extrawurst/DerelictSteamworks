@@ -171,7 +171,7 @@ enum ENotificationPosition
     k_EPositionBottomRight = 3,
 }
 
-public enum ESteamAPICallFailure
+enum ESteamAPICallFailure
 {
     k_ESteamAPICallFailureNone = -1,
     k_ESteamAPICallFailureSteamGone = 0,
@@ -180,13 +180,13 @@ public enum ESteamAPICallFailure
     k_ESteamAPICallFailureMismatchedCallback = 3,
 }
 
-public enum EGamepadTextInputMode
+enum EGamepadTextInputMode
 {
     k_EGamepadTextInputModeNormal = 0,
     k_EGamepadTextInputModePassword = 1,
 }
 
-public enum EGamepadTextInputLineMode
+enum EGamepadTextInputLineMode
 {
     k_EGamepadTextInputLineModeSingleLine = 0,
     k_EGamepadTextInputLineModeMultipleLines = 1,
@@ -209,6 +209,43 @@ align(1)struct FriendGameInfo_t
 };
 
 alias CSteamID = uint64;
-//align(1)struct CSteamID{uint64 dat;}
-extern(C++) interface CGameID{}
+alias CGameID = uint64;
+struct ISteamGameServer{}
+struct ISteamMatchmaking{}
+struct ISteamMatchmakingServers{}
+struct ISteamUserStats{}
+struct ISteamGameServerStats{}
+struct ISteamApps{}
+struct ISteamNetworking{}
+struct ISteamRemoteStorage{}
+struct ISteamScreenshots{}
+struct ISteamHTTP{}
+struct ISteamUnifiedMessages{}
+struct ISteamController{}
+struct ISteamUGC{}
+struct ISteamAppList{}
+struct ISteamMusic{}
+struct ISteamMusicRemote{}
+struct ISteamHTMLSurface{}
+struct ISteamInventory{}
+struct ISteamVideo{}
+struct ISteamUtils{}
+struct ISteamClient{}
 
+enum EAccountType
+{
+    k_EAccountTypeInvalid = 0,          
+    k_EAccountTypeIndividual = 1,       // single user account
+    k_EAccountTypeMultiseat = 2,        // multiseat (e.g. cybercafe) account
+    k_EAccountTypeGameServer = 3,       // game server account
+    k_EAccountTypeAnonGameServer = 4,   // anonymous game server account
+    k_EAccountTypePending = 5,          // pending
+    k_EAccountTypeContentServer = 6,    // content server
+    k_EAccountTypeClan = 7,
+    k_EAccountTypeChat = 8,
+    k_EAccountTypeConsoleUser = 9,      // Fake SteamID for local PSN account on PS3 or Live account on 360, etc.
+    k_EAccountTypeAnonUser = 10,
+    
+    // Max of 16 items in this field
+    k_EAccountTypeMax
+}

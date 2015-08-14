@@ -12,37 +12,54 @@ nothrow extern(C) void warnCallback(int severity, const char * str)
 void main()
 {
 	writeln("startup");
+    scope(exit) writefln("steam was shutdown");
 
     DerelictSteamworks.load();
 
     writefln("steam running: %s",SteamAPI_IsSteamRunning());
 
     auto res = SteamAPI_Init();
+
+    writefln("steam api init: %s",res);
+
     if(res)
     {
-        writefln("steam loaded: %s",res);
+        auto client = SteamClient();
+
+        auto pipe = SteamAPI_ISteamClient_CreateSteamPipe(client);
+
+        assert(pipe != 0);
 
         {
-            auto utils = SteamUtils();
-            
-            utils.SetWarningMessageHook(&warnCallback);
+            auto utils = SteamAPI_ISteamClient_GetISteamUtils(client, pipe, "");
 
-            writefln("seconds since start: %s(%s)",utils.GetSecondsSinceComputerActive(),utils.GetSecondsSinceAppActive());
+            assert(utils);
             
-            writefln("servertime: %s",utils.GetServerRealTime());
+            //utils.SetWarningMessageHook(&warnCallback);
+
+            //writefln("seconds since start: %s(%s)",utils.GetSecondsSinceComputerActive(),utils.GetSecondsSinceAppActive());
             
-            writefln("country: %s",to!string(utils.GetIPCountry()));
+            writefln("servertime: %s",SteamAPI_ISteamUtils_GetServerRealTime(utils));
+
+            /+writefln("country: %s",to!string(utils.GetIPCountry()));
             
             writefln("battery: %s",utils.GetCurrentBatteryPower());
 
             writefln("universe: %s",utils.GetConnectedUniverse());
+            +/
         }
 
-        {
-            auto usr = SteamUser();
+        //{
+            auto usrPipe = SteamAPI_ISteamClient_ConnectToGlobalUser(client, pipe);
 
-            writefln("steam usr loggedIn: %s",usr.BLoggedOn());
+            assert(usrPipe);
 
+            auto usr = SteamAPI_ISteamClient_GetISteamUser(client, usrPipe, pipe, "");
+
+            assert(usr);
+
+            writefln("steam usr loggedIn: %s",SteamAPI_ISteamUser_BLoggedOn(usr));
+            /+
             char[256] buff;
             res = usr.GetUserDataFolder(buff.ptr, 256);
             import std.c.string:strlen;
@@ -74,9 +91,8 @@ void main()
 
             writefln("friends [%s]: %s",i, to!string(nick));
         }
+        +/
     }
 
     SteamAPI_Shutdown();
-
-    writefln("steam was shutdown");
 }
