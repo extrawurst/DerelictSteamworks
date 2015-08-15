@@ -31,11 +31,11 @@ void main()
         assert(pipe != 0);
 
         {
-            auto utils = SteamAPI_ISteamClient_GetISteamUtils(client, pipe, "SteamUtils007");
+            auto utils = SteamAPI_ISteamClient_GetISteamUtils(client, pipe, STEAMUTILS_INTERFACE_VERSION);
 
             assert(utils);
-            
-            //utils.SetWarningMessageHook(&warnCallback);
+
+            SteamAPI_ISteamUtils_SetWarningMessageHook(utils, &warnCallback);
 
             writefln("seconds since start: %s(%s)",SteamAPI_ISteamUtils_GetSecondsSinceComputerActive(utils), SteamAPI_ISteamUtils_GetSecondsSinceAppActive(utils));
             
@@ -48,12 +48,12 @@ void main()
             writefln("universe: %s",SteamAPI_ISteamUtils_GetConnectedUniverse(utils));
         }
 
+        auto usrPipe = SteamAPI_ISteamClient_ConnectToGlobalUser(client, pipe);
+        
+        assert(usrPipe);
+
         {
-            auto usrPipe = SteamAPI_ISteamClient_ConnectToGlobalUser(client, pipe);
-
-            assert(usrPipe);
-
-            auto usr = SteamAPI_ISteamClient_GetISteamUser(client, usrPipe, pipe, "SteamUser018");
+            auto usr = SteamAPI_ISteamClient_GetISteamUser(client, usrPipe, pipe, STEAMUSER_INTERFACE_VERSION);
         
             assert(usr);
 
@@ -66,31 +66,38 @@ void main()
 
             writefln("steam usr steamlevel: %s",SteamAPI_ISteamUser_GetPlayerSteamLevel(usr));
         }
-        /+
-        auto friends = SteamFriends();
-        writefln("name: %s",to!string(friends.GetPersonaName()));
-        auto state = friends.GetPersonaState();
-        writefln("state: %s",state);
 
-        auto friendCnt = friends.GetFriendCount(EFriendFlags.k_EFriendFlagAll);
-        writefln("friends cnt: %s",friendCnt);
-        foreach(i; 0..friendCnt)
         {
-            auto steamId = SteamAPI_ISteamFriends_GetFriendByIndex(cast(void*)friends, i, EFriendFlags.k_EFriendFlagAll);
+            auto friends = SteamAPI_ISteamClient_GetISteamFriends(client, usrPipe, pipe, STEAMFRIENDS_INTERFACE_VERSION);
 
-            auto nick = SteamAPI_ISteamFriends_GetFriendPersonaName(cast(void*)friends,steamId);
+            assert(friends);
 
-            /+auto friendRelation = friends.GetFriendRelationship(steamId);
+            writefln("name: %s",to!string(SteamAPI_ISteamFriends_GetPersonaName(friends)));
 
-            auto personState = friends.GetFriendPersonaState(steamId);
+            auto state = SteamAPI_ISteamFriends_GetPersonaState(friends);
+            writefln("state: %s",state);
 
-            auto level = friends.GetFriendSteamLevel(steamId);
+            auto friendCnt = SteamAPI_ISteamFriends_GetFriendCount(friends, EFriendFlags.k_EFriendFlagAll);
+            writefln("friends cnt: %s",friendCnt);
 
-            writefln("friends [%s]: %s,%s,%s,%s,'%s'",i, to!string(friends.GetFriendPersonaName(steamId)), friendRelation, personState, level, nick);+/
+            foreach(i; 0..friendCnt)
+            {
+                auto steamId = SteamAPI_ISteamFriends_GetFriendByIndex(friends, i, EFriendFlags.k_EFriendFlagAll);
 
-            writefln("friends [%s]: %s",i, to!string(nick));
+                auto nick = SteamAPI_ISteamFriends_GetFriendPersonaName(friends, steamId);
+
+                auto friendRelation = SteamAPI_ISteamFriends_GetFriendRelationship(friends, steamId);
+
+                auto personState = SteamAPI_ISteamFriends_GetFriendPersonaState(friends, steamId);
+
+                auto level = SteamAPI_ISteamFriends_GetFriendSteamLevel(friends, steamId);
+
+                writefln("friends [%s]: '%s',%s,%s,%s",
+                    i, 
+                    to!string(nick), 
+                    friendRelation, personState, level);
+            }
         }
-        +/
     }
 
     SteamAPI_Shutdown();
