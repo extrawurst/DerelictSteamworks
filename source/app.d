@@ -98,6 +98,20 @@ void main()
                     friendRelation, personState, level);
             }
         }
+
+        {
+            auto matchmaking = SteamAPI_ISteamClient_GetISteamMatchmaking(client, usrPipe, pipe, STEAMMATCHMAKING_INTERFACE_VERSION);
+            
+            assert(matchmaking);
+
+            auto cnt = SteamAPI_ISteamMatchmaking_GetFavoriteGameCount(matchmaking);
+
+            writefln("[matchmaking] fave game cnt: %s",cnt);
+
+            auto apicall = SteamAPI_ISteamMatchmaking_RequestLobbyList(matchmaking);
+
+            assert(apicall);
+        }
     }
 
     SteamAPI_Shutdown();

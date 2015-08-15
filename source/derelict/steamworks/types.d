@@ -210,6 +210,8 @@ align(1)struct FriendGameInfo_t
 
 alias CSteamID = uint64;
 alias CGameID = uint64;
+alias HServerListRequest = void*;
+alias HServerQuery = int;
 struct ISteamGameServer{}
 struct ISteamMatchmaking{}
 struct ISteamMatchmakingServers{}
@@ -248,6 +250,133 @@ enum EAccountType
     
     // Max of 16 items in this field
     k_EAccountTypeMax
+}
+
+enum ELobbyType
+{
+    k_ELobbyTypePrivate = 0,        // only way to join the lobby is to invite to someone else
+    k_ELobbyTypeFriendsOnly = 1,    // shows for friends or invitees, but not in lobby list
+    k_ELobbyTypePublic = 2,         // visible for friends and in lobby list
+    k_ELobbyTypeInvisible = 3,      // returned by search, but not visible to other friends 
+    //    useful if you want a user in two lobbies, for example matching groups together
+    //    a user can be in only one regular lobby, and up to two invisible lobbies
+}
+
+enum ELobbyComparison
+{
+    k_ELobbyComparisonEqualToOrLessThan = -2,
+    k_ELobbyComparisonLessThan = -1,
+    k_ELobbyComparisonEqual = 0,
+    k_ELobbyComparisonGreaterThan = 1,
+    k_ELobbyComparisonEqualToOrGreaterThan = 2,
+    k_ELobbyComparisonNotEqual = 3,
+}
+
+enum ELobbyDistanceFilter
+{
+    k_ELobbyDistanceFilterClose,        // only lobbies in the same immediate region will be returned
+    k_ELobbyDistanceFilterDefault,      // only lobbies in the same region or near by regions
+    k_ELobbyDistanceFilterFar,          // for games that don't have many latency requirements, will return lobbies about half-way around the globe
+    k_ELobbyDistanceFilterWorldwide,    // no filtering, will match lobbies as far as India to NY (not recommended, expect multiple seconds of latency between the clients)
+}
+
+enum EMatchMakingServerResponse
+{
+    eServerResponded = 0,
+    eServerFailedToRespond,
+    eNoServersListedOnMasterServer // for the Internet query type, returned in response callback if no servers of this type match
+}
+
+static immutable int k_cbMaxGameServerGameDir = 32;
+static immutable int k_cbMaxGameServerMapName = 32;
+static immutable int k_cbMaxGameServerGameDescription = 64;
+static immutable int k_cbMaxGameServerName = 64;
+static immutable int k_cbMaxGameServerTags = 128;
+static immutable int k_cbMaxGameServerGameData = 2048;
+
+struct servernetadr_t 
+{
+    uint16  m_usConnectionPort; // (in HOST byte order)
+    uint16  m_usQueryPort;
+    uint32  m_unIP;
+}
+
+struct gameserveritem_t
+{
+    servernetadr_t m_NetAdr;                                    ///< IP/Query Port/Connection Port for this server
+    int m_nPing;                                                ///< current ping time in milliseconds
+    bool m_bHadSuccessfulResponse;                              ///< server has responded successfully in the past
+    bool m_bDoNotRefresh;                                       ///< server is marked as not responding and should no longer be refreshed
+    char[k_cbMaxGameServerGameDir] m_szGameDir;                 ///< current game directory
+    char[k_cbMaxGameServerMapName] m_szMap;                     ///< current map
+    char[k_cbMaxGameServerGameDescription] m_szGameDescription; ///< game description
+    uint32 m_nAppID;                                            ///< Steam App ID of this server
+    int m_nPlayers;                                             ///< total number of players currently on the server.  INCLUDES BOTS!!
+    int m_nMaxPlayers;                                          ///< Maximum players that can join this server
+    int m_nBotPlayers;                                          ///< Number of bots (i.e simulated players) on this server
+    bool m_bPassword;                                           ///< true if this server needs a password to join
+    bool m_bSecure;                                             ///< Is this server protected by VAC
+    uint32 m_ulTimeLastPlayed;                                  ///< time (in unix time) when this server was last played on (for favorite/history servers)
+    int m_nServerVersion;                                       ///< server version as reported to Steam
+    char[k_cbMaxGameServerName] m_szServerName;
+    char[k_cbMaxGameServerTags] m_szGameTags;
+    CSteamID m_steamID;
+}
+
+struct MatchMakingKeyValuePair_t
+{
+    char[ 256 ] m_szKey;
+    char[ 256 ] m_szValue;
+}
+
+interface ISteamMatchmakingServerListResponse
+{
+    // Server has responded ok with updated data
+    void ServerResponded( HServerListRequest hRequest, int iServer );
+    
+    // Server has failed to respond
+    void ServerFailedToRespond( HServerListRequest hRequest, int iServer );
+    
+    // A list refresh you had initiated is now 100% completed
+    void RefreshComplete( HServerListRequest hRequest, EMatchMakingServerResponse response );
+}
+
+interface ISteamMatchmakingPingResponse
+{
+    // Server has responded successfully and has updated data
+    void ServerResponded( gameserveritem_t* server );
+    
+    // Server failed to respond to the ping request
+    void ServerFailedToRespond();
+}
+
+interface ISteamMatchmakingPlayersResponse
+{
+    // Got data on a new player on the server -- you'll get this callback once per player
+    // on the server which you have requested player data on.
+    void AddPlayerToList( const(char)* pchName, int nScore, float flTimePlayed );
+    
+    // The server failed to respond to the request for player details
+    void PlayersFailedToRespond();
+    
+    // The server has finished responding to the player details request 
+    // (ie, you won't get anymore AddPlayerToList callbacks)
+    void PlayersRefreshComplete();
+}
+
+interface ISteamMatchmakingRulesResponse
+{
+public:
+    // Got data on a rule on the server -- you'll get one of these per rule defined on
+    // the server you are querying
+    void RulesResponded( const(char)* pchRule, const(char)* pchValue );
+    
+    // The server failed to respond to the request for rule details
+    void RulesFailedToRespond();
+    
+    // The server has finished responding to the rule details request 
+    // (ie, you won't get anymore RulesResponded callbacks)
+    void RulesRefreshComplete();
 }
 
 static immutable const(char)* STEAMAPPLIST_INTERFACE_VERSION = "STEAMAPPLIST_INTERFACE_VERSION001";
