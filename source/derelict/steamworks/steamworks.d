@@ -291,6 +291,50 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamMatchmakingServers_PlayerDetails, "SteamAPI_ISteamMatchmakingServers_PlayerDetails");
             bindFunc(cast(void**)&SteamAPI_ISteamMatchmakingServers_ServerRules, "SteamAPI_ISteamMatchmakingServers_ServerRules");
             bindFunc(cast(void**)&SteamAPI_ISteamMatchmakingServers_CancelServerQuery, "SteamAPI_ISteamMatchmakingServers_CancelServerQuery");   
+
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_RequestCurrentStats, "SteamAPI_ISteamUserStats_RequestCurrentStats");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetStat, "SteamAPI_ISteamUserStats_GetStat");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetStat0, "SteamAPI_ISteamUserStats_GetStat0");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_SetStat, "SteamAPI_ISteamUserStats_SetStat");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_SetStat0, "SteamAPI_ISteamUserStats_SetStat0");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_UpdateAvgRateStat, "SteamAPI_ISteamUserStats_UpdateAvgRateStat");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetAchievement, "SteamAPI_ISteamUserStats_GetAchievement");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_SetAchievement, "SteamAPI_ISteamUserStats_SetAchievement");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_ClearAchievement, "SteamAPI_ISteamUserStats_ClearAchievement");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetAchievementAndUnlockTime, "SteamAPI_ISteamUserStats_GetAchievementAndUnlockTime");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_StoreStats, "SteamAPI_ISteamUserStats_StoreStats");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetAchievementIcon, "SteamAPI_ISteamUserStats_GetAchievementIcon");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetAchievementDisplayAttribute, "SteamAPI_ISteamUserStats_GetAchievementDisplayAttribute");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_IndicateAchievementProgress, "SteamAPI_ISteamUserStats_IndicateAchievementProgress");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetNumAchievements, "SteamAPI_ISteamUserStats_GetNumAchievements");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetAchievementName, "SteamAPI_ISteamUserStats_GetAchievementName");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_RequestUserStats, "SteamAPI_ISteamUserStats_RequestUserStats");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetUserStat, "SteamAPI_ISteamUserStats_GetUserStat");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetUserStat0, "SteamAPI_ISteamUserStats_GetUserStat0");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetUserAchievement, "SteamAPI_ISteamUserStats_GetUserAchievement");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetUserAchievementAndUnlockTime, "SteamAPI_ISteamUserStats_GetUserAchievementAndUnlockTime");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_ResetAllStats, "SteamAPI_ISteamUserStats_ResetAllStats");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_FindOrCreateLeaderboard, "SteamAPI_ISteamUserStats_FindOrCreateLeaderboard");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_FindLeaderboard, "SteamAPI_ISteamUserStats_FindLeaderboard");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetLeaderboardName, "SteamAPI_ISteamUserStats_GetLeaderboardName");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetLeaderboardEntryCount, "SteamAPI_ISteamUserStats_GetLeaderboardEntryCount");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetLeaderboardSortMethod, "SteamAPI_ISteamUserStats_GetLeaderboardSortMethod");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetLeaderboardDisplayType, "SteamAPI_ISteamUserStats_GetLeaderboardDisplayType");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_DownloadLeaderboardEntries, "SteamAPI_ISteamUserStats_DownloadLeaderboardEntries");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_DownloadLeaderboardEntriesForUsers, "SteamAPI_ISteamUserStats_DownloadLeaderboardEntriesForUsers");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetDownloadedLeaderboardEntry, "SteamAPI_ISteamUserStats_GetDownloadedLeaderboardEntry");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_UploadLeaderboardScore, "SteamAPI_ISteamUserStats_UploadLeaderboardScore");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_AttachLeaderboardUGC, "SteamAPI_ISteamUserStats_AttachLeaderboardUGC");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetNumberOfCurrentPlayers, "SteamAPI_ISteamUserStats_GetNumberOfCurrentPlayers");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_RequestGlobalAchievementPercentages, "SteamAPI_ISteamUserStats_RequestGlobalAchievementPercentages");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetMostAchievedAchievementInfo, "SteamAPI_ISteamUserStats_GetMostAchievedAchievementInfo");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetNextMostAchievedAchievementInfo, "SteamAPI_ISteamUserStats_GetNextMostAchievedAchievementInfo");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetAchievementAchievedPercent, "SteamAPI_ISteamUserStats_GetAchievementAchievedPercent");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_RequestGlobalStats, "SteamAPI_ISteamUserStats_RequestGlobalStats");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetGlobalStat, "SteamAPI_ISteamUserStats_GetGlobalStat");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetGlobalStat0, "SteamAPI_ISteamUserStats_GetGlobalStat0");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetGlobalStatHistory, "SteamAPI_ISteamUserStats_GetGlobalStatHistory");
+            bindFunc(cast(void**)&SteamAPI_ISteamUserStats_GetGlobalStatHistory0, "SteamAPI_ISteamUserStats_GetGlobalStatHistory0");
         }
     }
 

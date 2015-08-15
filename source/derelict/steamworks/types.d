@@ -34,6 +34,7 @@ module derelict.steamworks.types;
 import derelict.util.system;
 
 alias int32 = int;
+alias int64 = long;
 alias uint64 = ulong;
 alias int16 = short;
 alias uint16 = ushort;
@@ -206,12 +207,24 @@ align(1)struct FriendGameInfo_t
     uint16 m_usGamePort;
     uint16 m_usQueryPort;
     CSteamID m_steamIDLobby;
-};
+}
+
+align(1)struct LeaderboardEntry_t
+{
+    CSteamID m_steamIDUser; // user with the entry - use SteamFriends()->GetFriendPersonaName() & SteamFriends()->GetFriendAvatar() to get more info
+    int32 m_nGlobalRank;    // [1..N], where N is the number of users with an entry in the leaderboard
+    int32 m_nScore;         // score as set in the leaderboard
+    int32 m_cDetails;       // number of int32 details available for this entry
+    UGCHandle_t m_hUGC;     // handle for UGC attached to the entry
+}
 
 alias CSteamID = uint64;
 alias CGameID = uint64;
 alias HServerListRequest = void*;
 alias HServerQuery = int;
+alias UGCHandle_t = uint64;
+alias SteamLeaderboard_t = uint64;
+alias SteamLeaderboardEntries_t = uint64;
 struct ISteamGameServer{}
 struct ISteamMatchmaking{}
 struct ISteamMatchmakingServers{}
@@ -287,6 +300,36 @@ enum EMatchMakingServerResponse
     eNoServersListedOnMasterServer // for the Internet query type, returned in response callback if no servers of this type match
 }
 
+enum ELeaderboardSortMethod
+{
+    k_ELeaderboardSortMethodNone = 0,
+    k_ELeaderboardSortMethodAscending = 1,  // top-score is lowest number
+    k_ELeaderboardSortMethodDescending = 2, // top-score is highest number
+}
+
+enum ELeaderboardDisplayType
+{
+    k_ELeaderboardDisplayTypeNone = 0, 
+    k_ELeaderboardDisplayTypeNumeric = 1,           // simple numerical score
+    k_ELeaderboardDisplayTypeTimeSeconds = 2,       // the score represents a time, in seconds
+    k_ELeaderboardDisplayTypeTimeMilliSeconds = 3,  // the score represents a time, in milliseconds
+}
+
+enum ELeaderboardDataRequest
+{
+    k_ELeaderboardDataRequestGlobal = 0,
+    k_ELeaderboardDataRequestGlobalAroundUser = 1,
+    k_ELeaderboardDataRequestFriends = 2,
+    k_ELeaderboardDataRequestUsers = 3
+}
+
+enum ELeaderboardUploadScoreMethod
+{
+    k_ELeaderboardUploadScoreMethodNone = 0,
+    k_ELeaderboardUploadScoreMethodKeepBest = 1,    // Leaderboard will keep user's best score
+    k_ELeaderboardUploadScoreMethodForceUpdate = 2, // Leaderboard will always replace score with specified
+}
+
 static immutable int k_cbMaxGameServerGameDir = 32;
 static immutable int k_cbMaxGameServerMapName = 32;
 static immutable int k_cbMaxGameServerGameDescription = 64;
@@ -329,12 +372,68 @@ struct MatchMakingKeyValuePair_t
     char[ 256 ] m_szValue;
 }
 
-enum k_iSteamMatchmakingCallbacks = 500 ;
+//-----------------------------------------------------------------------------
+// Purpose: Base values for callback identifiers, each callback must
+//          have a unique ID.
+//-----------------------------------------------------------------------------
+enum k_iSteamUserCallbacks = 100;
+enum k_iSteamGameServerCallbacks = 200;
+enum k_iSteamFriendsCallbacks = 300;
+enum k_iSteamBillingCallbacks = 400;
+enum k_iSteamMatchmakingCallbacks = 500;
+enum k_iSteamContentServerCallbacks = 600;
+enum k_iSteamUtilsCallbacks = 700;
+enum k_iClientFriendsCallbacks = 800;
+enum k_iClientUserCallbacks = 900;
+enum k_iSteamAppsCallbacks = 1000;
+enum k_iSteamUserStatsCallbacks = 1100;
+enum k_iSteamNetworkingCallbacks = 1200;
+enum k_iClientRemoteStorageCallbacks = 1300;
+enum k_iClientDepotBuilderCallbacks = 1400;
+enum k_iSteamGameServerItemsCallbacks = 1500;
+enum k_iClientUtilsCallbacks = 1600;
+enum k_iSteamGameCoordinatorCallbacks = 1700;
+enum k_iSteamGameServerStatsCallbacks = 1800;
+enum k_iSteam2AsyncCallbacks = 1900;
+enum k_iSteamGameStatsCallbacks = 2000;
+enum k_iClientHTTPCallbacks = 2100;
+enum k_iClientScreenshotsCallbacks = 2200;
+enum k_iSteamScreenshotsCallbacks = 2300;
+enum k_iClientAudioCallbacks = 2400;
+enum k_iClientUnifiedMessagesCallbacks = 2500;
+enum k_iSteamStreamLauncherCallbacks = 2600;
+enum k_iClientControllerCallbacks = 2700;
+enum k_iSteamControllerCallbacks = 2800;
+enum k_iClientParentalSettingsCallbacks = 2900;
+enum k_iClientDeviceAuthCallbacks = 3000;
+enum k_iClientNetworkDeviceManagerCallbacks = 3100;
+enum k_iClientMusicCallbacks = 3200;
+enum k_iClientRemoteClientManagerCallbacks = 3300;
+enum k_iClientUGCCallbacks = 3400;
+enum k_iSteamStreamClientCallbacks = 3500;
+enum k_IClientProductBuilderCallbacks = 3600;
+enum k_iClientShortcutsCallbacks = 3700;
+enum k_iClientRemoteControlManagerCallbacks = 3800;
+enum k_iSteamAppListCallbacks = 3900;
+enum k_iSteamMusicCallbacks = 4000;
+enum k_iSteamMusicRemoteCallbacks = 4100;
+enum k_iClientVRCallbacks = 4200;
+enum k_iClientReservedCallbacks = 4300;
+enum k_iSteamReservedCallbacks = 4400;
+enum k_iSteamHTMLSurfaceCallbacks = 4500;
+enum k_iClientVideoCallbacks = 4600;
+enum k_iClientInventoryCallbacks = 4700;
 
 struct LobbyMatchList_t
 {
     enum k_iCallback = k_iSteamMatchmakingCallbacks + 10;
     uint32 m_nLobbiesMatching;      // Number of lobbies that matched search criteria and we have SteamIDs for
+}
+struct NumberOfCurrentPlayers_t
+{
+    enum k_iCallback = k_iSteamUserStatsCallbacks + 7;
+    uint8 m_bSuccess;           // 1 if the call was successful
+    int32 m_cPlayers;           // Number of players currently playing
 }
 
 interface ISteamMatchmakingServerListResponse

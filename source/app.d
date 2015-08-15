@@ -9,6 +9,11 @@ nothrow extern(C) void warnCallback(int severity, const char * str)
     catch{}
 }
 
+bool getApiCallResult(T)(ISteamUtils* utils, SteamAPICall_t apicall, ref T resultData, bool* failed)
+{
+    return SteamAPI_ISteamUtils_GetAPICallResult(utils, apicall, &resultData, resultData.sizeof, T.k_iCallback, failed);
+}
+
 void main()
 {
 	writeln("startup");
@@ -122,7 +127,7 @@ void main()
 
             LobbyMatchList_t resultData;
 
-            auto myres = SteamAPI_ISteamUtils_GetAPICallResult(utils, apicall, &resultData, resultData.sizeof, LobbyMatchList_t.k_iCallback, &failed);
+            auto myres = getApiCallResult(utils, apicall, resultData, &failed);
 
             writefln("[matchmaking] res: %s (failed: %s): %s", myres, failed, resultData);
 
@@ -134,6 +139,28 @@ void main()
                 
                 writefln("[matchmaking] lobby: [%s] %s members: %s", i, lobby, memberCount);
             }
+        }
+
+        {
+            auto userstats = SteamAPI_ISteamClient_GetISteamUserStats(client, usrPipe, pipe, STEAMUSERSTATS_INTERFACE_VERSION);
+
+            auto apicall = SteamAPI_ISteamUserStats_GetNumberOfCurrentPlayers(userstats);
+
+            assert(apicall);
+
+            bool failed;
+            while(!SteamAPI_ISteamUtils_IsAPICallCompleted(utils, apicall, &failed))
+            {
+                //writefln("[matchmaking] wait for api call to complete (%s)", failed);
+            }
+            
+            writefln("[userstats] api call completed (failed: %s)", failed);
+
+            NumberOfCurrentPlayers_t resultData;
+            
+            auto myres = getApiCallResult(utils, apicall, resultData, &failed);
+            
+            writefln("[userstats] res: %s (failed: %s): %s", myres, failed, resultData);
         }
     }
 
