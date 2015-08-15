@@ -329,6 +329,14 @@ struct MatchMakingKeyValuePair_t
     char[ 256 ] m_szValue;
 }
 
+enum k_iSteamMatchmakingCallbacks = 500 ;
+
+struct LobbyMatchList_t
+{
+    enum k_iCallback = k_iSteamMatchmakingCallbacks + 10;
+    uint32 m_nLobbiesMatching;      // Number of lobbies that matched search criteria and we have SteamIDs for
+}
+
 interface ISteamMatchmakingServerListResponse
 {
     // Server has responded ok with updated data

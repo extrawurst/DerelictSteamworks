@@ -30,11 +30,11 @@ void main()
 
         assert(pipe != 0);
 
+        auto utils = SteamAPI_ISteamClient_GetISteamUtils(client, pipe, STEAMUTILS_INTERFACE_VERSION);
+        
+        assert(utils);
+
         {
-            auto utils = SteamAPI_ISteamClient_GetISteamUtils(client, pipe, STEAMUTILS_INTERFACE_VERSION);
-
-            assert(utils);
-
             SteamAPI_ISteamUtils_SetWarningMessageHook(utils, &warnCallback);
 
             writefln("seconds since start: %s(%s)",SteamAPI_ISteamUtils_GetSecondsSinceComputerActive(utils), SteamAPI_ISteamUtils_GetSecondsSinceAppActive(utils));
@@ -111,6 +111,29 @@ void main()
             auto apicall = SteamAPI_ISteamMatchmaking_RequestLobbyList(matchmaking);
 
             assert(apicall);
+
+            bool failed;
+            while(!SteamAPI_ISteamUtils_IsAPICallCompleted(utils, apicall, &failed))
+            {
+                //writefln("[matchmaking] wait for api call to complete (%s)", failed);
+            }
+
+            writefln("[matchmaking] api call completed (failed: %s)", failed);
+
+            LobbyMatchList_t resultData;
+
+            auto myres = SteamAPI_ISteamUtils_GetAPICallResult(utils, apicall, &resultData, resultData.sizeof, LobbyMatchList_t.k_iCallback, &failed);
+
+            writefln("[matchmaking] res: %s (failed: %s): %s", myres, failed, resultData);
+
+            foreach(i; 0..resultData.m_nLobbiesMatching)
+            {
+                auto lobby = SteamAPI_ISteamMatchmaking_GetLobbyByIndex(matchmaking, i);
+                
+                auto memberCount = SteamAPI_ISteamMatchmaking_GetNumLobbyMembers(matchmaking, lobby);
+                
+                writefln("[matchmaking] lobby: [%s] %s members: %s", i, lobby, memberCount);
+            }
         }
     }
 
