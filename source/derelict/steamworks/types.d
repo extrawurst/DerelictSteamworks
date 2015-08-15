@@ -225,6 +225,9 @@ alias HServerQuery = int;
 alias UGCHandle_t = uint64;
 alias SteamLeaderboard_t = uint64;
 alias SteamLeaderboardEntries_t = uint64;
+alias UGCFileWriteStreamHandle_t = uint64;
+alias PublishedFileUpdateHandle_t = uint64;
+alias PublishedFileId_t = uint64;
 struct ISteamGameServer{}
 struct ISteamMatchmaking{}
 struct ISteamMatchmakingServers{}
@@ -330,6 +333,90 @@ enum ELeaderboardUploadScoreMethod
     k_ELeaderboardUploadScoreMethodForceUpdate = 2, // Leaderboard will always replace score with specified
 }
 
+enum ERemoteStoragePlatform
+{
+    k_ERemoteStoragePlatformNone        = 0,
+    k_ERemoteStoragePlatformWindows     = (1 << 0),
+    k_ERemoteStoragePlatformOSX         = (1 << 1),
+    k_ERemoteStoragePlatformPS3         = (1 << 2),
+    k_ERemoteStoragePlatformLinux       = (1 << 3),
+    k_ERemoteStoragePlatformReserved2   = (1 << 4),
+    
+    k_ERemoteStoragePlatformAll = 0xffffffff
+}
+
+enum EUGCReadAction
+{
+    // Keeps the file handle open unless the last byte is read.  You can use this when reading large files (over 100MB) in sequential chunks.
+    // If the last byte is read, this will behave the same as k_EUGCRead_Close.  Otherwise, it behaves the same as k_EUGCRead_ContinueReading.
+    // This value maintains the same behavior as before the EUGCReadAction parameter was introduced.
+    k_EUGCRead_ContinueReadingUntilFinished = 0,
+    
+    // Keeps the file handle open.  Use this when using UGCRead to seek to different parts of the file.
+    // When you are done seeking around the file, make a final call with k_EUGCRead_Close to close it.
+    k_EUGCRead_ContinueReading = 1,
+    
+    // Frees the file handle.  Use this when you're done reading the content.  
+    // To read the file from Steam again you will need to call UGCDownload again. 
+    k_EUGCRead_Close = 2,   
+}
+
+enum ERemoteStoragePublishedFileVisibility
+{
+    k_ERemoteStoragePublishedFileVisibilityPublic = 0,
+    k_ERemoteStoragePublishedFileVisibilityFriendsOnly = 1,
+    k_ERemoteStoragePublishedFileVisibilityPrivate = 2,
+}
+
+enum EWorkshopFileType
+{
+    k_EWorkshopFileTypeFirst = 0,
+    
+    k_EWorkshopFileTypeCommunity              = 0,      // normal Workshop item that can be subscribed to
+    k_EWorkshopFileTypeMicrotransaction       = 1,      // Workshop item that is meant to be voted on for the purpose of selling in-game
+    k_EWorkshopFileTypeCollection             = 2,      // a collection of Workshop or Greenlight items
+    k_EWorkshopFileTypeArt                    = 3,      // artwork
+    k_EWorkshopFileTypeVideo                  = 4,      // external video
+    k_EWorkshopFileTypeScreenshot             = 5,      // screenshot
+    k_EWorkshopFileTypeGame                   = 6,      // Greenlight game entry
+    k_EWorkshopFileTypeSoftware               = 7,      // Greenlight software entry
+    k_EWorkshopFileTypeConcept                = 8,      // Greenlight concept
+    k_EWorkshopFileTypeWebGuide               = 9,      // Steam web guide
+    k_EWorkshopFileTypeIntegratedGuide        = 10,     // application integrated guide
+    k_EWorkshopFileTypeMerch                  = 11,     // Workshop merchandise meant to be voted on for the purpose of being sold
+    k_EWorkshopFileTypeControllerBinding      = 12,     // Steam Controller bindings
+    k_EWorkshopFileTypeSteamworksAccessInvite = 13,     // internal
+    k_EWorkshopFileTypeSteamVideo             = 14,     // Steam video
+    k_EWorkshopFileTypeGameManagedItem        = 15,     // managed completely by the game, not the user, and not shown on the web
+    
+    // Update k_EWorkshopFileTypeMax if you add values.
+    k_EWorkshopFileTypeMax = 16
+    
+}
+
+enum EWorkshopVideoProvider
+{
+    k_EWorkshopVideoProviderNone = 0,
+    k_EWorkshopVideoProviderYoutube = 1
+}
+
+enum EWorkshopFileAction
+{
+    k_EWorkshopFileActionPlayed = 0,
+    k_EWorkshopFileActionCompleted = 1,
+}
+
+enum EWorkshopEnumerationType
+{
+    k_EWorkshopEnumerationTypeRankedByVote = 0,
+    k_EWorkshopEnumerationTypeRecent = 1,
+    k_EWorkshopEnumerationTypeTrending = 2,
+    k_EWorkshopEnumerationTypeFavoritesOfFriends = 3,
+    k_EWorkshopEnumerationTypeVotedByFriends = 4,
+    k_EWorkshopEnumerationTypeContentByFriends = 5,
+    k_EWorkshopEnumerationTypeRecentFromFollowedUsers = 6,
+}
+
 static immutable int k_cbMaxGameServerGameDir = 32;
 static immutable int k_cbMaxGameServerMapName = 32;
 static immutable int k_cbMaxGameServerGameDescription = 64;
@@ -370,6 +457,12 @@ struct MatchMakingKeyValuePair_t
 {
     char[ 256 ] m_szKey;
     char[ 256 ] m_szValue;
+}
+
+struct SteamParamStringArray_t
+{
+    const(char)** m_ppStrings;
+    int32 m_nNumStrings;
 }
 
 //-----------------------------------------------------------------------------

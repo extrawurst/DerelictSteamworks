@@ -162,6 +162,20 @@ void main()
             
             writefln("[userstats] res: %s (failed: %s): %s", myres, failed, resultData);
         }
+
+        {
+            auto remotestore = SteamAPI_ISteamClient_GetISteamRemoteStorage(client, usrPipe, pipe, STEAMREMOTESTORAGE_INTERFACE_VERSION);
+
+            assert(remotestore);
+
+            int32 total;
+            int32 avail;
+            auto qres = SteamAPI_ISteamRemoteStorage_GetQuota(remotestore, &total, &avail);
+
+            assert(qres);
+
+            writefln("[RemoteStorage] GetQuota: %s/%s", avail, total);
+        }
     }
 
     SteamAPI_Shutdown();
