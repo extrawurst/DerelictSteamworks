@@ -176,6 +176,45 @@ void main()
 
             writefln("[RemoteStorage] GetQuota: %s/%s", avail, total);
         }
+
+        {
+            auto music = SteamAPI_ISteamClient_GetISteamMusic(client, usrPipe, pipe, STEAMMUSIC_INTERFACE_VERSION);
+
+            assert(music);
+
+            auto isEnabled = SteamAPI_ISteamMusic_BIsEnabled(music);
+
+            writefln("[music] isenabled: %s", isEnabled);
+
+            auto isPlaying = SteamAPI_ISteamMusic_BIsPlaying(music);
+
+            writefln("[music] isPlaying: %s", isPlaying);
+
+            if(!isPlaying)
+            {
+                SteamAPI_ISteamMusic_Play(music);
+
+                assert(SteamAPI_ISteamMusic_BIsPlaying(music));
+            }
+        }
+
+        {
+            auto apps = SteamAPI_ISteamClient_GetISteamApps(client, usrPipe, pipe, STEAMAPPS_INTERFACE_VERSION);
+
+            assert(apps);
+
+            auto isSubscribed = SteamAPI_ISteamApps_BIsSubscribed(apps);
+
+            writefln("[apps] isSubscribed: %s", isSubscribed);
+
+            auto lang = SteamAPI_ISteamApps_GetCurrentGameLanguage(apps);
+
+            writefln("[apps] CurrentGameLanguage: %s", lang);
+
+            auto langsAvail = SteamAPI_ISteamApps_GetAvailableGameLanguages(apps);
+
+            writefln("[apps] AvailableGameLanguages: %s", langsAvail);
+        }
     }
 
     SteamAPI_Shutdown();
