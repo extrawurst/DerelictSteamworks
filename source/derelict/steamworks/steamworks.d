@@ -35,7 +35,8 @@ public
 {
 	import derelict.steamworks.types;
     import derelict.steamworks.funcs;
-    import derelict.steamworks.interfaces;
+    import derelict.steamworks.enums;
+    import derelict.steamworks.structs;
 }
 
 private
