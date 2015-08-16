@@ -193,8 +193,6 @@ void main()
             if(!isPlaying)
             {
                 SteamAPI_ISteamMusic_Play(music);
-
-                assert(SteamAPI_ISteamMusic_BIsPlaying(music));
             }
         }
 
@@ -209,11 +207,11 @@ void main()
 
             auto lang = SteamAPI_ISteamApps_GetCurrentGameLanguage(apps);
 
-            writefln("[apps] CurrentGameLanguage: %s", lang);
+            writefln("[apps] CurrentGameLanguage: %s", to!string(lang));
 
             auto langsAvail = SteamAPI_ISteamApps_GetAvailableGameLanguages(apps);
 
-            writefln("[apps] AvailableGameLanguages: %s", langsAvail);
+            writefln("[apps] AvailableGameLanguages: %s", to!string(langsAvail));
         }
     }
 
