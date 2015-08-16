@@ -218,6 +218,74 @@ align(1)struct LeaderboardEntry_t
     UGCHandle_t m_hUGC;     // handle for UGC attached to the entry
 }
 
+struct SteamControllerState001_t
+{
+    // If packet num matches that on your prior call, then the controller state hasn't been changed since 
+    // your last call and there is no need to process it
+    uint32 unPacketNum;
+    
+    // bit flags for each of the buttons
+    uint64 ulButtons;
+    
+    // Left pad coordinates
+    short sLeftPadX;
+    short sLeftPadY;
+    
+    // Right pad coordinates
+    short sRightPadX;
+    short sRightPadY;
+    
+}
+
+static immutable uint32 k_cchPublishedDocumentTitleMax = 128 + 1;
+static immutable uint32 k_cchPublishedDocumentDescriptionMax = 8000;
+static immutable uint32 k_cchPublishedDocumentChangeDescriptionMax = 8000;
+static immutable uint32 k_unEnumeratePublishedFilesMaxResults = 50;
+static immutable uint32 k_cchTagListMax = 1024 + 1;
+static immutable uint32 k_cchFilenameMax = 260;
+static immutable uint32 k_cchPublishedFileURLMax = 256;
+
+struct SteamUGCDetails_t
+{
+    PublishedFileId_t m_nPublishedFileId;
+    EResult m_eResult;                                              // The result of the operation. 
+    EWorkshopFileType m_eFileType;                                  // Type of the file
+    AppId_t m_nCreatorAppID;                                        // ID of the app that created this file.
+    AppId_t m_nConsumerAppID;                                       // ID of the app that will consume this file.
+    char[k_cchPublishedDocumentTitleMax] m_rgchTitle;               // title of document
+    char[k_cchPublishedDocumentDescriptionMax] m_rgchDescription;   // description of document
+    uint64 m_ulSteamIDOwner;                                        // Steam ID of the user who created this content.
+    uint32 m_rtimeCreated;                                          // time when the published file was created
+    uint32 m_rtimeUpdated;                                          // time when the published file was last updated
+    uint32 m_rtimeAddedToUserList;                                  // time when the user added the published file to their list (not always applicable)
+    ERemoteStoragePublishedFileVisibility m_eVisibility;            // visibility
+    bool m_bBanned;                                                 // whether the file was banned
+    bool m_bAcceptedForUse;                                         // developer has specifically flagged this item as accepted in the Workshop
+    bool m_bTagsTruncated;                                          // whether the list of tags was too long to be returned in the provided buffer
+    char[k_cchTagListMax] m_rgchTags;                               // comma separated list of all tags associated with this file   
+    // file/url information
+    UGCHandle_t m_hFile;                                            // The handle of the primary file
+    UGCHandle_t m_hPreviewFile;                                     // The handle of the preview file
+    char[k_cchFilenameMax] m_pchFileName;                           // The cloud filename of the primary file
+    int32 m_nFileSize;                                              // Size of the primary file
+    int32 m_nPreviewFileSize;                                       // Size of the preview file
+    char[k_cchPublishedFileURLMax] m_rgchURL;                       // URL (for a video or a website)
+    // voting information
+    uint32 m_unVotesUp;                                             // number of votes up
+    uint32 m_unVotesDown;                                           // number of votes down
+    float m_flScore;                                                // calculated score
+    // collection details
+    uint32 m_unNumChildren;                         
+}
+
+struct SteamItemDetails_t
+{
+    SteamItemInstanceID_t m_itemId;
+    SteamItemDef_t m_iDefinition;
+    uint16 m_unQuantity;
+    uint16 m_unFlags; // see ESteamItemFlags
+}
+
 alias CSteamID = uint64;
 alias CGameID = uint64;
 alias HServerListRequest = void*;
@@ -228,6 +296,22 @@ alias SteamLeaderboardEntries_t = uint64;
 alias UGCFileWriteStreamHandle_t = uint64;
 alias PublishedFileUpdateHandle_t = uint64;
 alias PublishedFileId_t = uint64;
+alias DepotId_t = uint32;
+alias SNetListenSocket_t = uint32;
+alias SNetSocket_t = uint32;
+alias ScreenshotHandle = uint32;
+alias HTTPRequestHandle = uint32;
+alias HTTPCookieContainerHandle = uint32;
+alias ClientUnifiedMessageHandle = uint64;
+alias UGCQueryHandle_t = uint64;
+alias UGCUpdateHandle_t = uint64;
+alias AccountID_t = uint32;
+alias HHTMLBrowser = uint32;
+alias RTime32 = uint32;
+alias SteamInventoryResult_t = int32;
+alias SteamItemInstanceID_t = uint64;
+alias SteamItemDef_t = int32;
+
 struct ISteamGameServer{}
 struct ISteamMatchmaking{}
 struct ISteamMatchmakingServers{}
@@ -417,6 +501,308 @@ enum EWorkshopEnumerationType
     k_EWorkshopEnumerationTypeRecentFromFollowedUsers = 6,
 }
 
+enum EP2PSend
+{
+    // Basic UDP send. Packets can't be bigger than 1200 bytes (your typical MTU size). Can be lost, or arrive out of order (rare).
+    // The sending API does have some knowledge of the underlying connection, so if there is no NAT-traversal accomplished or
+    // there is a recognized adjustment happening on the connection, the packet will be batched until the connection is open again.
+    k_EP2PSendUnreliable = 0,
+    
+    // As above, but if the underlying p2p connection isn't yet established the packet will just be thrown away. Using this on the first
+    // packet sent to a remote host almost guarantees the packet will be dropped.
+    // This is only really useful for kinds of data that should never buffer up, i.e. voice payload packets
+    k_EP2PSendUnreliableNoDelay = 1,
+    
+    // Reliable message send. Can send up to 1MB of data in a single message. 
+    // Does fragmentation/re-assembly of messages under the hood, as well as a sliding window for efficient sends of large chunks of data. 
+    k_EP2PSendReliable = 2,
+    
+    // As above, but applies the Nagle algorithm to the send - sends will accumulate 
+    // until the current MTU size (typically ~1200 bytes, but can change) or ~200ms has passed (Nagle algorithm). 
+    // Useful if you want to send a set of smaller messages but have the coalesced into a single packet
+    // Since the reliable stream is all ordered, you can do several small message sends with k_EP2PSendReliableWithBuffering and then
+    // do a normal k_EP2PSendReliable to force all the buffered data to be sent.
+    k_EP2PSendReliableWithBuffering = 3,
+}
+
+enum ESNetSocketConnectionType
+{
+    k_ESNetSocketConnectionTypeNotConnected = 0,
+    k_ESNetSocketConnectionTypeUDP = 1,
+    k_ESNetSocketConnectionTypeUDPRelay = 2,
+}
+
+enum AudioPlayback_Status
+{
+    AudioPlayback_Undefined = 0, 
+    AudioPlayback_Playing = 1,
+    AudioPlayback_Paused = 2,
+    AudioPlayback_Idle = 3
+}
+
+enum ISteamHTMLSurface_EHTMLMouseButton
+{
+    eHTMLMouseButton_Left = 0,
+    eHTMLMouseButton_Right = 1,
+    eHTMLMouseButton_Middle = 2,
+}
+
+enum ISteamHTMLSurface_EMouseCursor
+{
+    dc_user = 0,
+    dc_none,
+    dc_arrow,
+    dc_ibeam,
+    dc_hourglass,
+    dc_waitarrow,
+    dc_crosshair,
+    dc_up,
+    dc_sizenw,
+    dc_sizese,
+    dc_sizene,
+    dc_sizesw,
+    dc_sizew,
+    dc_sizee,
+    dc_sizen,
+    dc_sizes,
+    dc_sizewe,
+    dc_sizens,
+    dc_sizeall,
+    dc_no,
+    dc_hand,
+    dc_blank, // don't show any custom cursor, just use your default
+    dc_middle_pan,
+    dc_north_pan,
+    dc_north_east_pan,
+    dc_east_pan,
+    dc_south_east_pan,
+    dc_south_pan,
+    dc_south_west_pan,
+    dc_west_pan,
+    dc_north_west_pan,
+    dc_alias,
+    dc_cell,
+    dc_colresize,
+    dc_copycur,
+    dc_verticaltext,
+    dc_rowresize,
+    dc_zoomin,
+    dc_zoomout,
+    dc_help,
+    dc_custom,
+    
+    dc_last, // custom cursors start from this value and up
+}
+
+enum ISteamHTMLSurface_EHTMLKeyModifiers
+{
+    k_eHTMLKeyModifier_None = 0,
+    k_eHTMLKeyModifier_AltDown = 1 << 0,
+    k_eHTMLKeyModifier_CtrlDown = 1 << 1,
+    k_eHTMLKeyModifier_ShiftDown = 1 << 2,
+}
+
+enum EHTTPMethod
+{
+    k_EHTTPMethodInvalid = 0,
+    k_EHTTPMethodGET = 1,
+    k_EHTTPMethodHEAD = 2,
+    k_EHTTPMethodPOST = 3,
+    k_EHTTPMethodPUT = 4,
+    k_EHTTPMethodDELETE = 5,
+    k_EHTTPMethodOPTIONS = 6,
+}
+
+enum EResult
+{
+    k_EResultOK = 1,                            // success
+    k_EResultFail = 2,                          // generic failure 
+    k_EResultNoConnection = 3,                  // no/failed network connection
+    //  k_EResultNoConnectionRetry = 4,             // OBSOLETE - removed
+    k_EResultInvalidPassword = 5,               // password/ticket is invalid
+    k_EResultLoggedInElsewhere = 6,             // same user logged in elsewhere
+    k_EResultInvalidProtocolVer = 7,            // protocol version is incorrect
+    k_EResultInvalidParam = 8,                  // a parameter is incorrect
+    k_EResultFileNotFound = 9,                  // file was not found
+    k_EResultBusy = 10,                         // called method busy - action not taken
+    k_EResultInvalidState = 11,                 // called object was in an invalid state
+    k_EResultInvalidName = 12,                  // name is invalid
+    k_EResultInvalidEmail = 13,                 // email is invalid
+    k_EResultDuplicateName = 14,                // name is not unique
+    k_EResultAccessDenied = 15,                 // access is denied
+    k_EResultTimeout = 16,                      // operation timed out
+    k_EResultBanned = 17,                       // VAC2 banned
+    k_EResultAccountNotFound = 18,              // account not found
+    k_EResultInvalidSteamID = 19,               // steamID is invalid
+    k_EResultServiceUnavailable = 20,           // The requested service is currently unavailable
+    k_EResultNotLoggedOn = 21,                  // The user is not logged on
+    k_EResultPending = 22,                      // Request is pending (may be in process, or waiting on third party)
+    k_EResultEncryptionFailure = 23,            // Encryption or Decryption failed
+    k_EResultInsufficientPrivilege = 24,        // Insufficient privilege
+    k_EResultLimitExceeded = 25,                // Too much of a good thing
+    k_EResultRevoked = 26,                      // Access has been revoked (used for revoked guest passes)
+    k_EResultExpired = 27,                      // License/Guest pass the user is trying to access is expired
+    k_EResultAlreadyRedeemed = 28,              // Guest pass has already been redeemed by account, cannot be acked again
+    k_EResultDuplicateRequest = 29,             // The request is a duplicate and the action has already occurred in the past, ignored this time
+    k_EResultAlreadyOwned = 30,                 // All the games in this guest pass redemption request are already owned by the user
+    k_EResultIPNotFound = 31,                   // IP address not found
+    k_EResultPersistFailed = 32,                // failed to write change to the data store
+    k_EResultLockingFailed = 33,                // failed to acquire access lock for this operation
+    k_EResultLogonSessionReplaced = 34,
+    k_EResultConnectFailed = 35,
+    k_EResultHandshakeFailed = 36,
+    k_EResultIOFailure = 37,
+    k_EResultRemoteDisconnect = 38,
+    k_EResultShoppingCartNotFound = 39,         // failed to find the shopping cart requested
+    k_EResultBlocked = 40,                      // a user didn't allow it
+    k_EResultIgnored = 41,                      // target is ignoring sender
+    k_EResultNoMatch = 42,                      // nothing matching the request found
+    k_EResultAccountDisabled = 43,
+    k_EResultServiceReadOnly = 44,              // this service is not accepting content changes right now
+    k_EResultAccountNotFeatured = 45,           // account doesn't have value, so this feature isn't available
+    k_EResultAdministratorOK = 46,              // allowed to take this action, but only because requester is admin
+    k_EResultContentVersion = 47,               // A Version mismatch in content transmitted within the Steam protocol.
+    k_EResultTryAnotherCM = 48,                 // The current CM can't service the user making a request, user should try another.
+    k_EResultPasswordRequiredToKickSession = 49,// You are already logged in elsewhere, this cached credential login has failed.
+    k_EResultAlreadyLoggedInElsewhere = 50,     // You are already logged in elsewhere, you must wait
+    k_EResultSuspended = 51,                    // Long running operation (content download) suspended/paused
+    k_EResultCancelled = 52,                    // Operation canceled (typically by user: content download)
+    k_EResultDataCorruption = 53,               // Operation canceled because data is ill formed or unrecoverable
+    k_EResultDiskFull = 54,                     // Operation canceled - not enough disk space.
+    k_EResultRemoteCallFailed = 55,             // an remote call or IPC call failed
+    k_EResultPasswordUnset = 56,                // Password could not be verified as it's unset server side
+    k_EResultExternalAccountUnlinked = 57,      // External account (PSN, Facebook...) is not linked to a Steam account
+    k_EResultPSNTicketInvalid = 58,             // PSN ticket was invalid
+    k_EResultExternalAccountAlreadyLinked = 59, // External account (PSN, Facebook...) is already linked to some other account, must explicitly request to replace/delete the link first
+    k_EResultRemoteFileConflict = 60,           // The sync cannot resume due to a conflict between the local and remote files
+    k_EResultIllegalPassword = 61,              // The requested new password is not legal
+    k_EResultSameAsPreviousValue = 62,          // new value is the same as the old one ( secret question and answer )
+    k_EResultAccountLogonDenied = 63,           // account login denied due to 2nd factor authentication failure
+    k_EResultCannotUseOldPassword = 64,         // The requested new password is not legal
+    k_EResultInvalidLoginAuthCode = 65,         // account login denied due to auth code invalid
+    k_EResultAccountLogonDeniedNoMail = 66,     // account login denied due to 2nd factor auth failure - and no mail has been sent
+    k_EResultHardwareNotCapableOfIPT = 67,      // 
+    k_EResultIPTInitError = 68,                 // 
+    k_EResultParentalControlRestricted = 69,    // operation failed due to parental control restrictions for current user
+    k_EResultFacebookQueryError = 70,           // Facebook query returned an error
+    k_EResultExpiredLoginAuthCode = 71,         // account login denied due to auth code expired
+    k_EResultIPLoginRestrictionFailed = 72,
+    k_EResultAccountLockedDown = 73,
+    k_EResultAccountLogonDeniedVerifiedEmailRequired = 74,
+    k_EResultNoMatchingURL = 75,
+    k_EResultBadResponse = 76,                  // parse failure, missing field, etc.
+    k_EResultRequirePasswordReEntry = 77,       // The user cannot complete the action until they re-enter their password
+    k_EResultValueOutOfRange = 78,              // the value entered is outside the acceptable range
+    k_EResultUnexpectedError = 79,              // something happened that we didn't expect to ever happen
+    k_EResultDisabled = 80,                     // The requested service has been configured to be unavailable
+    k_EResultInvalidCEGSubmission = 81,         // The set of files submitted to the CEG server are not valid !
+    k_EResultRestrictedDevice = 82,             // The device being used is not allowed to perform this action
+    k_EResultRegionLocked = 83,                 // The action could not be complete because it is region restricted
+    k_EResultRateLimitExceeded = 84,            // Temporary rate limit exceeded, try again later, different from k_EResultLimitExceeded which may be permanent
+    k_EResultAccountLoginDeniedNeedTwoFactor = 85,  // Need two-factor code to login
+    k_EResultItemDeleted = 86,                  // The thing we're trying to access has been deleted
+    k_EResultAccountLoginDeniedThrottle = 87,   // login attempt failed, try to throttle response to possible attacker
+    k_EResultTwoFactorCodeMismatch = 88,        // two factor code mismatch
+    k_EResultTwoFactorActivationCodeMismatch = 89,  // activation code for two-factor didn't match
+    k_EResultAccountAssociatedToMultiplePartners = 90,  // account has been associated with multiple partners
+    k_EResultNotModified = 91,                  // data not modified
+    k_EResultNoMobileDevice = 92,               // the account does not have a mobile device associated with it
+    k_EResultTimeNotSynced = 93,                // the time presented is out of range or tolerance
+    k_EResultSmsCodeFailed = 94,                // SMS code failure (no match, none pending, etc.)
+    k_EResultAccountLimitExceeded = 95,         // Too many accounts access this resource
+    k_EResultAccountActivityLimitExceeded = 96, // Too many changes to this account
+    k_EResultPhoneActivityLimitExceeded = 97,   // Too many changes to this phone
+    k_EResultRefundToWallet = 98,               // Cannot refund to payment method, must use wallet
+    k_EResultEmailSendFailure = 99,             // Cannot send an email
+    k_EResultNotSettled = 100,                  // Can't perform operation till payment has settled
+}
+
+enum ESteamControllerPad
+{
+    k_ESteamControllerPad_Left,
+    k_ESteamControllerPad_Right
+}
+
+enum EUGCQuery
+{
+    k_EUGCQuery_RankedByVote                                  = 0,
+    k_EUGCQuery_RankedByPublicationDate                       = 1,
+    k_EUGCQuery_AcceptedForGameRankedByAcceptanceDate         = 2,
+    k_EUGCQuery_RankedByTrend                                 = 3,
+    k_EUGCQuery_FavoritedByFriendsRankedByPublicationDate     = 4,
+    k_EUGCQuery_CreatedByFriendsRankedByPublicationDate       = 5,
+    k_EUGCQuery_RankedByNumTimesReported                      = 6,
+    k_EUGCQuery_CreatedByFollowedUsersRankedByPublicationDate = 7,
+    k_EUGCQuery_NotYetRated                                   = 8,
+    k_EUGCQuery_RankedByTotalVotesAsc                         = 9,
+    k_EUGCQuery_RankedByVotesUp                               = 10,
+    k_EUGCQuery_RankedByTextSearch                            = 11,
+    k_EUGCQuery_RankedByTotalUniqueSubscriptions              = 12,
+}
+
+enum EUserUGCList
+{
+    k_EUserUGCList_Published,
+    k_EUserUGCList_VotedOn,
+    k_EUserUGCList_VotedUp,
+    k_EUserUGCList_VotedDown,
+    k_EUserUGCList_WillVoteLater,
+    k_EUserUGCList_Favorited,
+    k_EUserUGCList_Subscribed,
+    k_EUserUGCList_UsedOrPlayed,
+    k_EUserUGCList_Followed,
+}
+
+enum EUserUGCListSortOrder
+{
+    k_EUserUGCListSortOrder_CreationOrderDesc,
+    k_EUserUGCListSortOrder_CreationOrderAsc,
+    k_EUserUGCListSortOrder_TitleAsc,
+    k_EUserUGCListSortOrder_LastUpdatedDesc,
+    k_EUserUGCListSortOrder_SubscriptionDateDesc,
+    k_EUserUGCListSortOrder_VoteScoreDesc,
+    k_EUserUGCListSortOrder_ForModeration,
+}
+
+enum EUGCMatchingUGCType
+{
+    k_EUGCMatchingUGCType_Items              = 0,       // both mtx items and ready-to-use items
+    k_EUGCMatchingUGCType_Items_Mtx          = 1,
+    k_EUGCMatchingUGCType_Items_ReadyToUse   = 2,
+    k_EUGCMatchingUGCType_Collections        = 3,
+    k_EUGCMatchingUGCType_Artwork            = 4,
+    k_EUGCMatchingUGCType_Videos             = 5,
+    k_EUGCMatchingUGCType_Screenshots        = 6,
+    k_EUGCMatchingUGCType_AllGuides          = 7,       // both web guides and integrated guides
+    k_EUGCMatchingUGCType_WebGuides          = 8,
+    k_EUGCMatchingUGCType_IntegratedGuides   = 9,
+    k_EUGCMatchingUGCType_UsableInGame       = 10,      // ready-to-use items and integrated guides
+    k_EUGCMatchingUGCType_ControllerBindings = 11,
+    k_EUGCMatchingUGCType_GameManagedItems   = 12,      // game managed items (not managed by users)
+}
+
+enum EItemStatistic
+{
+    k_EItemStatistic_NumSubscriptions       = 0,
+    k_EItemStatistic_NumFavorites           = 1,
+    k_EItemStatistic_NumFollowers           = 2,
+    k_EItemStatistic_NumUniqueSubscriptions = 3,
+    k_EItemStatistic_NumUniqueFavorites     = 4,
+    k_EItemStatistic_NumUniqueFollowers     = 5,
+    k_EItemStatistic_NumUniqueWebsiteViews  = 6,
+    k_EItemStatistic_ReportScore            = 7,
+}
+
+enum EItemUpdateStatus
+{
+    k_EItemUpdateStatusInvalid              = 0, // The item update handle was invalid, job might be finished, listen too SubmitItemUpdateResult_t
+    k_EItemUpdateStatusPreparingConfig      = 1, // The item update is processing configuration data
+    k_EItemUpdateStatusPreparingContent     = 2, // The item update is reading and processing content files
+    k_EItemUpdateStatusUploadingContent     = 3, // The item update is uploading content changes to Steam
+    k_EItemUpdateStatusUploadingPreviewFile = 4, // The item update is uploading new preview file image
+    k_EItemUpdateStatusCommittingChanges    = 5  // The item update is committing all changes
+}
+
 static immutable int k_cbMaxGameServerGameDir = 32;
 static immutable int k_cbMaxGameServerMapName = 32;
 static immutable int k_cbMaxGameServerGameDescription = 64;
@@ -464,6 +850,18 @@ struct SteamParamStringArray_t
     const(char)** m_ppStrings;
     int32 m_nNumStrings;
 }
+
+struct P2PSessionState_t
+{
+    uint8 m_bConnectionActive;      // true if we've got an active open connection
+    uint8 m_bConnecting;            // true if we're currently trying to establish a connection
+    uint8 m_eP2PSessionError;       // last error recorded (see enum above)
+    uint8 m_bUsingRelay;            // true if it's going through a relay server (TURN)
+    int32 m_nBytesQueuedForSend;
+    int32 m_nPacketsQueuedForSend;
+    uint32 m_nRemoteIP;             // potential IP:Port of remote host. Could be TURN server. 
+    uint16 m_nRemotePort;           // Only exists for compatibility with older authentication api's
+};
 
 //-----------------------------------------------------------------------------
 // Purpose: Base values for callback identifiers, each callback must
@@ -566,7 +964,6 @@ interface ISteamMatchmakingPlayersResponse
 
 interface ISteamMatchmakingRulesResponse
 {
-public:
     // Got data on a rule on the server -- you'll get one of these per rule defined on
     // the server you are querying
     void RulesResponded( const(char)* pchRule, const(char)* pchValue );
