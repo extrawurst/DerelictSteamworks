@@ -4,6 +4,8 @@ Based on Steamworks SDK 1.34 flat-c-api (only since that version the flat api is
 
 *work in progress*
 
+*note:* the overlay rendering does not work on osx right now. this seems to be a bug in the current steamworks lib
+
 # instructions
 
 to start the demo just run dub:
