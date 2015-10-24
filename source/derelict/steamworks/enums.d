@@ -525,12 +525,6 @@ enum EResult
     k_EResultNotSettled = 100,                  // Can't perform operation till payment has settled
 }
 
-enum ESteamControllerPad
-{
-    k_ESteamControllerPad_Left,
-    k_ESteamControllerPad_Right
-}
-
 enum EUGCQuery
 {
     k_EUGCQuery_RankedByVote                                  = 0,
@@ -587,6 +581,7 @@ enum EUGCMatchingUGCType
     k_EUGCMatchingUGCType_UsableInGame       = 10,      // ready-to-use items and integrated guides
     k_EUGCMatchingUGCType_ControllerBindings = 11,
     k_EUGCMatchingUGCType_GameManagedItems   = 12,      // game managed items (not managed by users)
+    k_EUGCMatchingUGCType_All                = ~0,      // return everything
 }
 
 enum EItemStatistic

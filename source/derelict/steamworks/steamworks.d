@@ -37,6 +37,11 @@ public
     import derelict.steamworks.funcs;
     import derelict.steamworks.enums;
     import derelict.steamworks.structs;
+
+    import derelict.steamworks.steamcontroller;
+    import derelict.steamworks.steamremotestorage;
+    import derelict.steamworks.steamuser;
+    import derelict.steamworks.steamclientpublic;
 }
 
 private
@@ -295,6 +300,9 @@ final class DerelictSteamworksLoader : SharedLibLoader
 
             bindFunc(cast(void**)&SteamAPI_ISteamRemoteStorage_FileWrite, "SteamAPI_ISteamRemoteStorage_FileWrite");
             bindFunc(cast(void**)&SteamAPI_ISteamRemoteStorage_FileRead, "SteamAPI_ISteamRemoteStorage_FileRead");
+            bindFunc(cast(void**)&SteamAPI_ISteamRemoteStorage_FileWriteAsync, "SteamAPI_ISteamRemoteStorage_FileWriteAsync");
+            bindFunc(cast(void**)&SteamAPI_ISteamRemoteStorage_FileReadAsync, "SteamAPI_ISteamRemoteStorage_FileReadAsync");
+            bindFunc(cast(void**)&SteamAPI_ISteamRemoteStorage_FileReadAsyncComplete, "SteamAPI_ISteamRemoteStorage_FileReadAsyncComplete");
             bindFunc(cast(void**)&SteamAPI_ISteamRemoteStorage_FileForget, "SteamAPI_ISteamRemoteStorage_FileForget");
             bindFunc(cast(void**)&SteamAPI_ISteamRemoteStorage_FileDelete, "SteamAPI_ISteamRemoteStorage_FileDelete");
             bindFunc(cast(void**)&SteamAPI_ISteamRemoteStorage_FileShare, "SteamAPI_ISteamRemoteStorage_FileShare");
@@ -519,12 +527,24 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamUnifiedMessages_GetMethodResponseData, "SteamAPI_ISteamUnifiedMessages_GetMethodResponseData");
             bindFunc(cast(void**)&SteamAPI_ISteamUnifiedMessages_ReleaseMethod, "SteamAPI_ISteamUnifiedMessages_ReleaseMethod");
             bindFunc(cast(void**)&SteamAPI_ISteamUnifiedMessages_SendNotification, "SteamAPI_ISteamUnifiedMessages_SendNotification");
+
             bindFunc(cast(void**)&SteamAPI_ISteamController_Init, "SteamAPI_ISteamController_Init");
             bindFunc(cast(void**)&SteamAPI_ISteamController_Shutdown, "SteamAPI_ISteamController_Shutdown");
             bindFunc(cast(void**)&SteamAPI_ISteamController_RunFrame, "SteamAPI_ISteamController_RunFrame");
-            bindFunc(cast(void**)&SteamAPI_ISteamController_GetControllerState, "SteamAPI_ISteamController_GetControllerState");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_GetConnectedControllers, "SteamAPI_ISteamController_GetConnectedControllers");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_ShowBindingPanel, "SteamAPI_ISteamController_ShowBindingPanel");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_GetActionSetHandle, "SteamAPI_ISteamController_GetActionSetHandle");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_ActivateActionSet, "SteamAPI_ISteamController_ActivateActionSet");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_GetCurrentActionSet, "SteamAPI_ISteamController_GetCurrentActionSet");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_GetDigitalActionHandle, "SteamAPI_ISteamController_GetDigitalActionHandle");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_GetDigitalActionData, "SteamAPI_ISteamController_GetDigitalActionData");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_GetDigitalActionOrigins, "SteamAPI_ISteamController_GetDigitalActionOrigins");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_GetAnalogActionHandle, "SteamAPI_ISteamController_GetAnalogActionHandle");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_GetAnalogActionData, "SteamAPI_ISteamController_GetAnalogActionData");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_GetAnalogActionOrigins, "SteamAPI_ISteamController_GetAnalogActionOrigins");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_StopAnalogActionMomentum, "SteamAPI_ISteamController_StopAnalogActionMomentum");
             bindFunc(cast(void**)&SteamAPI_ISteamController_TriggerHapticPulse, "SteamAPI_ISteamController_TriggerHapticPulse");
-            bindFunc(cast(void**)&SteamAPI_ISteamController_SetOverrideMode, "SteamAPI_ISteamController_SetOverrideMode");
+
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_CreateQueryUserUGCRequest, "SteamAPI_ISteamUGC_CreateQueryUserUGCRequest");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_CreateQueryAllUGCRequest, "SteamAPI_ISteamUGC_CreateQueryAllUGCRequest");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_CreateQueryUGCDetailsRequest, "SteamAPI_ISteamUGC_CreateQueryUGCDetailsRequest");
@@ -581,6 +601,9 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_GetItemInstallInfo, "SteamAPI_ISteamUGC_GetItemInstallInfo");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_GetItemDownloadInfo, "SteamAPI_ISteamUGC_GetItemDownloadInfo");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_DownloadItem, "SteamAPI_ISteamUGC_DownloadItem");
+            bindFunc(cast(void**)&SteamAPI_ISteamUGC_BInitWorkshopForGameServer, "SteamAPI_ISteamUGC_BInitWorkshopForGameServer");
+            bindFunc(cast(void**)&SteamAPI_ISteamUGC_SuspendDownloads, "SteamAPI_ISteamUGC_SuspendDownloads");
+
             bindFunc(cast(void**)&SteamAPI_ISteamAppList_GetNumInstalledApps, "SteamAPI_ISteamAppList_GetNumInstalledApps");
             bindFunc(cast(void**)&SteamAPI_ISteamAppList_GetInstalledApps, "SteamAPI_ISteamAppList_GetInstalledApps");
             bindFunc(cast(void**)&SteamAPI_ISteamAppList_GetAppName, "SteamAPI_ISteamAppList_GetAppName");
