@@ -35,6 +35,11 @@ import derelict.util.system;
 import derelict.steamworks.enums;
 import derelict.steamworks.structs;
 
+mixin template SteamAlignment()
+{
+    enum SteamAlignment = "align(4):";
+}
+
 alias int32 = int;
 alias int64 = long;
 alias uint64 = ulong;
@@ -72,7 +77,6 @@ alias PublishedFileId_t = uint64;
 alias DepotId_t = uint32;
 alias SNetListenSocket_t = uint32;
 alias SNetSocket_t = uint32;
-alias ScreenshotHandle = uint32;
 alias HTTPRequestHandle = uint32;
 alias HTTPCookieContainerHandle = uint32;
 alias ClientUnifiedMessageHandle = uint64;
@@ -165,9 +169,6 @@ interface ISteamMatchmakingRulesResponse
     void RulesRefreshComplete();
 }
 
-static immutable const(char)* STEAMAPPLIST_INTERFACE_VERSION = "STEAMAPPLIST_INTERFACE_VERSION001";
-static immutable const(char)* STEAMAPPS_INTERFACE_VERSION = "STEAMAPPS_INTERFACE_VERSION007";
-static immutable const(char)* STEAMAPPTICKET_INTERFACE_VERSION = "STEAMAPPTICKET_INTERFACE_VERSION001";
 static immutable const(char)* STEAMCLIENT_INTERFACE_VERSION = "SteamClient017";
 static immutable const(char)* STEAMFRIENDS_INTERFACE_VERSION = "SteamFriends015";
 static immutable const(char)* STEAMGAMECOORDINATOR_INTERFACE_VERSION = "SteamGameCoordinator001";
@@ -181,7 +182,6 @@ static immutable const(char)* STEAMMATCHMAKINGSERVERS_INTERFACE_VERSION = "Steam
 static immutable const(char)* STEAMMUSIC_INTERFACE_VERSION = "STEAMMUSIC_INTERFACE_VERSION001";
 static immutable const(char)* STEAMMUSICREMOTE_INTERFACE_VERSION = "STEAMMUSICREMOTE_INTERFACE_VERSION001";
 static immutable const(char)* STEAMNETWORKING_INTERFACE_VERSION = "SteamNetworking005";
-static immutable const(char)* STEAMSCREENSHOTS_INTERFACE_VERSION = "STEAMSCREENSHOTS_INTERFACE_VERSION002";
 static immutable const(char)* STEAMUGC_INTERFACE_VERSION = "STEAMUGC_INTERFACE_VERSION007";
 static immutable const(char)* STEAMUNIFIEDMESSAGES_INTERFACE_VERSION = "STEAMUNIFIEDMESSAGES_INTERFACE_VERSION001";
 static immutable const(char)* STEAMUSER_INTERFACE_VERSION = "SteamUser018";

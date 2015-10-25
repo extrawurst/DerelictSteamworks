@@ -1,4 +1,4 @@
-﻿module derelict.steamworks.steamremotestorage;
+﻿module derelict.steamworks.interfaces.steamremotestorage;
 
 import derelict.steamworks.enums;
 import derelict.steamworks.types;

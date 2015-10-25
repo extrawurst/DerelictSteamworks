@@ -1,4 +1,4 @@
-﻿module derelict.steamworks.steamclientpublic;
+﻿module derelict.steamworks.interfaces.steamclientpublic;
 
 enum EAppOwnershipFlags
 {

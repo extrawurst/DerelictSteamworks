@@ -1,8 +1,9 @@
-﻿module derelict.steamworks.steamuser;
+﻿module derelict.steamworks.interfaces.steamuser;
 
 import derelict.steamworks.enums;
 import derelict.steamworks.types;
-import derelict.steamworks.steamclientpublic;
+
+import derelict.steamworks.interfaces.steamclientpublic;
 
 align(1):
 

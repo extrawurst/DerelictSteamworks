@@ -38,10 +38,7 @@ public
     import derelict.steamworks.enums;
     import derelict.steamworks.structs;
 
-    import derelict.steamworks.steamcontroller;
-    import derelict.steamworks.steamremotestorage;
-    import derelict.steamworks.steamuser;
-    import derelict.steamworks.steamclientpublic;
+    import derelict.steamworks.interfaces;
 }
 
 private

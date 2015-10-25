@@ -1,4 +1,4 @@
-﻿module derelict.steamworks.steamcontroller;
+﻿module derelict.steamworks.interfaces.steamcontroller;
 
 import derelict.steamworks.types;
 

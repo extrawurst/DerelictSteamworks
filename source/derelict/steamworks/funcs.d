@@ -37,7 +37,8 @@ private
     import derelict.steamworks.types;
     import derelict.steamworks.enums;
     import derelict.steamworks.structs;
-    import derelict.steamworks.steamcontroller;
+
+    import derelict.steamworks.interfaces;
 }
 
 @nogc nothrow extern(C)
