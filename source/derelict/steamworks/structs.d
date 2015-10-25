@@ -2,6 +2,7 @@
 
 import derelict.steamworks.enums;
 import derelict.steamworks.types;
+import derelict.steamworks.interfaces;
 
 align(1):
 
@@ -116,12 +117,6 @@ struct MatchMakingKeyValuePair_t
 {
     char[ 256 ] m_szKey;
     char[ 256 ] m_szValue;
-}
-
-struct SteamParamStringArray_t
-{
-    const(char)** m_ppStrings;
-    int32 m_nNumStrings;
 }
 
 struct P2PSessionState_t

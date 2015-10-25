@@ -5,8 +5,6 @@ import derelict.steamworks.types;
 
 static immutable const(char)* STEAMAPPLIST_INTERFACE_VERSION = "STEAMAPPLIST_INTERFACE_VERSION001";
 
-//TODO:
-
 mixin SteamAlignment;
 
 struct SteamAppInstalled_t

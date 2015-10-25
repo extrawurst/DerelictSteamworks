@@ -37,7 +37,7 @@ import derelict.steamworks.structs;
 
 mixin template SteamAlignment()
 {
-    enum SteamAlignment = "align(4):";
+    enum SteamAlignment = "align(1):";
 }
 
 alias int32 = int;
@@ -188,11 +188,3 @@ static immutable const(char)* STEAMUSER_INTERFACE_VERSION = "SteamUser018";
 static immutable const(char)* STEAMUSERSTATS_INTERFACE_VERSION = "STEAMUSERSTATS_INTERFACE_VERSION011";
 static immutable const(char)* STEAMUTILS_INTERFACE_VERSION = "SteamUtils007";
 static immutable const(char)* STEAMVIDEO_INTERFACE_VERSION = "STEAMVIDEO_INTERFACE_V001";
-
-static immutable uint32 k_cchPublishedDocumentTitleMax = 128 + 1;
-static immutable uint32 k_cchPublishedDocumentDescriptionMax = 8000;
-static immutable uint32 k_cchPublishedDocumentChangeDescriptionMax = 8000;
-static immutable uint32 k_unEnumeratePublishedFilesMaxResults = 50;
-static immutable uint32 k_cchTagListMax = 1024 + 1;
-static immutable uint32 k_cchFilenameMax = 260;
-static immutable uint32 k_cchPublishedFileURLMax = 256;
