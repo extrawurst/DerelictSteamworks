@@ -99,6 +99,7 @@ enum EFriendFlags
     k_EFriendFlagIgnored        = 0x200,
     k_EFriendFlagIgnoredFriend  = 0x400,
     k_EFriendFlagSuggested      = 0x800,
+    k_EFriendFlagChatMember     = 0x1000,
     k_EFriendFlagAll            = 0xFFFF,
 }
 
@@ -657,3 +658,4 @@ enum k_iSteamReservedCallbacks = 4400;
 enum k_iSteamHTMLSurfaceCallbacks = 4500;
 enum k_iClientVideoCallbacks = 4600;
 enum k_iClientInventoryCallbacks = 4700;
+enum k_iClientBluetoothManagerCallbacks = 4800;

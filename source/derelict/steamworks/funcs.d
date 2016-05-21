@@ -46,6 +46,7 @@ private
     alias da_SteamAPI_Shutdown = void function();
     alias da_SteamAPI_IsSteamRunning = bool function();
     alias da_SteamClient = ISteamClient* function();
+    alias da_SteamAPI_ReleaseCurrentThreadMemory = void function();
 
     alias da_SteamAPI_ISteamClient_CreateSteamPipe = HSteamPipe function(intptr_t instancePtr);
     alias da_SteamAPI_ISteamClient_BReleaseSteamPipe = bool function(intptr_t instancePtr, HSteamPipe hSteamPipe);
@@ -399,6 +400,9 @@ private
     alias da_SteamAPI_ISteamApps_GetLaunchQueryParam = const(char)* function(intptr_t instancePtr, const(char)* pchKey);
     alias da_SteamAPI_ISteamApps_GetDlcDownloadProgress = bool function(intptr_t instancePtr, AppId_t nAppID, uint64 * punBytesDownloaded, uint64 * punBytesTotal);
     alias da_SteamAPI_ISteamApps_GetAppBuildId = int function(intptr_t instancePtr);
+    alias da_SteamAPI_ISteamApps_RequestPublisherOwnedAppData = void function(intptr_t instancePtr);
+    alias da_SteamAPI_ISteamApps_GetPublisherOwnedAppData = uint32 function(intptr_t instancePtr, ubyte* pubBuffer, uint32 unMaxBytes);
+
 
     alias da_SteamAPI_ISteamNetworking_SendP2PPacket = bool function(intptr_t instancePtr, CSteamID steamIDRemote, const void * pubData, uint32 cubData, EP2PSend eP2PSendType, int nChannel);
     alias da_SteamAPI_ISteamNetworking_IsP2PPacketAvailable = bool function(intptr_t instancePtr, uint32 * pcubMsgSize, int nChannel);
@@ -521,6 +525,7 @@ private
     alias da_SteamAPI_ISteamController_GetAnalogActionOrigins = int function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerAnalogActionHandle_t analogActionHandle, EControllerActionOrigin * originsOut);
     alias da_SteamAPI_ISteamController_StopAnalogActionMomentum = void function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t eAction);
     alias da_SteamAPI_ISteamController_TriggerHapticPulse = void function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, ushort usDurationMicroSec);
+    alias da_SteamAPI_ISteamController_TriggerRepeatedHapticPulse = void function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, ushort usDurationMicroSec, ushort usOffMicroSec, ushort unRepeat, uint nFlags);
 
     alias da_SteamAPI_ISteamUGC_CreateQueryUserUGCRequest = UGCQueryHandle_t function(intptr_t instancePtr, AccountID_t unAccountID, EUserUGCList eListType, EUGCMatchingUGCType eMatchingUGCType, EUserUGCListSortOrder eSortOrder, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage);
     alias da_SteamAPI_ISteamUGC_CreateQueryAllUGCRequest = UGCQueryHandle_t function(intptr_t instancePtr, EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage);
@@ -622,7 +627,6 @@ private
     alias da_SteamAPI_ISteamHTMLSurface_SetBackgroundMode = void function(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, bool bBackgroundMode);
     alias da_SteamAPI_ISteamHTMLSurface_AllowStartRequest = void function(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, bool bAllowed);
     alias da_SteamAPI_ISteamHTMLSurface_JSDialogResponse = void function(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, bool bResult);
-    alias da_SteamAPI_ISteamHTMLSurface_FileLoadDialogResponse = void function(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, const(char)** pchSelectedFiles);
 
     alias da_SteamAPI_ISteamInventory_GetResultStatus = EResult function(intptr_t instancePtr, SteamInventoryResult_t resultHandle);
     alias da_SteamAPI_ISteamInventory_GetResultItems = bool function(intptr_t instancePtr, SteamInventoryResult_t resultHandle, SteamItemDetails_t * pOutItemsArray, uint32 * punOutItemsArraySize);
@@ -709,6 +713,7 @@ private
 __gshared
 {
     da_SteamAPI_Init SteamAPI_Init;
+    da_SteamAPI_ReleaseCurrentThreadMemory SteamAPI_ReleaseCurrentThreadMemory;
     da_SteamAPI_Shutdown SteamAPI_Shutdown;
     da_SteamAPI_IsSteamRunning SteamAPI_IsSteamRunning;
     da_SteamClient SteamClient;
@@ -1065,6 +1070,8 @@ __gshared
     da_SteamAPI_ISteamApps_GetLaunchQueryParam SteamAPI_ISteamApps_GetLaunchQueryParam;
     da_SteamAPI_ISteamApps_GetDlcDownloadProgress SteamAPI_ISteamApps_GetDlcDownloadProgress;
     da_SteamAPI_ISteamApps_GetAppBuildId SteamAPI_ISteamApps_GetAppBuildId;
+    da_SteamAPI_ISteamApps_RequestPublisherOwnedAppData SteamAPI_ISteamApps_RequestPublisherOwnedAppData;
+    da_SteamAPI_ISteamApps_GetPublisherOwnedAppData SteamAPI_ISteamApps_GetPublisherOwnedAppData;
 
     da_SteamAPI_ISteamNetworking_SendP2PPacket SteamAPI_ISteamNetworking_SendP2PPacket;
     da_SteamAPI_ISteamNetworking_IsP2PPacketAvailable SteamAPI_ISteamNetworking_IsP2PPacketAvailable;
@@ -1188,6 +1195,8 @@ __gshared
     da_SteamAPI_ISteamController_GetAnalogActionOrigins SteamAPI_ISteamController_GetAnalogActionOrigins;
     da_SteamAPI_ISteamController_StopAnalogActionMomentum SteamAPI_ISteamController_StopAnalogActionMomentum;
     da_SteamAPI_ISteamController_TriggerHapticPulse SteamAPI_ISteamController_TriggerHapticPulse;
+    da_SteamAPI_ISteamController_TriggerRepeatedHapticPulse SteamAPI_ISteamController_TriggerRepeatedHapticPulse;
+
 
     da_SteamAPI_ISteamUGC_CreateQueryUserUGCRequest SteamAPI_ISteamUGC_CreateQueryUserUGCRequest;
     da_SteamAPI_ISteamUGC_CreateQueryAllUGCRequest SteamAPI_ISteamUGC_CreateQueryAllUGCRequest;
@@ -1289,7 +1298,6 @@ __gshared
     da_SteamAPI_ISteamHTMLSurface_SetBackgroundMode SteamAPI_ISteamHTMLSurface_SetBackgroundMode;
     da_SteamAPI_ISteamHTMLSurface_AllowStartRequest SteamAPI_ISteamHTMLSurface_AllowStartRequest;
     da_SteamAPI_ISteamHTMLSurface_JSDialogResponse SteamAPI_ISteamHTMLSurface_JSDialogResponse;
-    da_SteamAPI_ISteamHTMLSurface_FileLoadDialogResponse SteamAPI_ISteamHTMLSurface_FileLoadDialogResponse;
 
     da_SteamAPI_ISteamInventory_GetResultStatus SteamAPI_ISteamInventory_GetResultStatus;
     da_SteamAPI_ISteamInventory_GetResultItems SteamAPI_ISteamInventory_GetResultItems;

@@ -69,6 +69,7 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_Shutdown, "SteamAPI_Shutdown");
             bindFunc(cast(void**)&SteamAPI_IsSteamRunning, "SteamAPI_IsSteamRunning");
             bindFunc(cast(void**)&SteamClient, "SteamClient");
+            bindFunc(cast(void**)&SteamAPI_ReleaseCurrentThreadMemory, "SteamAPI_ReleaseCurrentThreadMemory");
                 
             bindFunc(cast(void**)&SteamAPI_ISteamClient_CreateSteamPipe, "SteamAPI_ISteamClient_CreateSteamPipe");
             bindFunc(cast(void**)&SteamAPI_ISteamClient_BReleaseSteamPipe, "SteamAPI_ISteamClient_BReleaseSteamPipe");
@@ -422,6 +423,8 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamApps_GetLaunchQueryParam, "SteamAPI_ISteamApps_GetLaunchQueryParam");
             bindFunc(cast(void**)&SteamAPI_ISteamApps_GetDlcDownloadProgress, "SteamAPI_ISteamApps_GetDlcDownloadProgress");
             bindFunc(cast(void**)&SteamAPI_ISteamApps_GetAppBuildId, "SteamAPI_ISteamApps_GetAppBuildId");
+            bindFunc(cast(void**)&SteamAPI_ISteamApps_RequestPublisherOwnedAppData, "SteamAPI_ISteamApps_RequestPublisherOwnedAppData");
+            bindFunc(cast(void**)&SteamAPI_ISteamApps_GetPublisherOwnedAppData, "SteamAPI_ISteamApps_GetPublisherOwnedAppData");
             
             bindFunc(cast(void**)&SteamAPI_ISteamNetworking_SendP2PPacket, "SteamAPI_ISteamNetworking_SendP2PPacket");
             bindFunc(cast(void**)&SteamAPI_ISteamNetworking_IsP2PPacketAvailable, "SteamAPI_ISteamNetworking_IsP2PPacketAvailable");
@@ -544,6 +547,7 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamController_GetAnalogActionOrigins, "SteamAPI_ISteamController_GetAnalogActionOrigins");
             bindFunc(cast(void**)&SteamAPI_ISteamController_StopAnalogActionMomentum, "SteamAPI_ISteamController_StopAnalogActionMomentum");
             bindFunc(cast(void**)&SteamAPI_ISteamController_TriggerHapticPulse, "SteamAPI_ISteamController_TriggerHapticPulse");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_TriggerRepeatedHapticPulse, "SteamAPI_ISteamController_TriggerRepeatedHapticPulse");
 
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_CreateQueryUserUGCRequest, "SteamAPI_ISteamUGC_CreateQueryUserUGCRequest");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_CreateQueryAllUGCRequest, "SteamAPI_ISteamUGC_CreateQueryAllUGCRequest");
@@ -644,7 +648,6 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamHTMLSurface_SetBackgroundMode, "SteamAPI_ISteamHTMLSurface_SetBackgroundMode");
             bindFunc(cast(void**)&SteamAPI_ISteamHTMLSurface_AllowStartRequest, "SteamAPI_ISteamHTMLSurface_AllowStartRequest");
             bindFunc(cast(void**)&SteamAPI_ISteamHTMLSurface_JSDialogResponse, "SteamAPI_ISteamHTMLSurface_JSDialogResponse");
-            bindFunc(cast(void**)&SteamAPI_ISteamHTMLSurface_FileLoadDialogResponse, "SteamAPI_ISteamHTMLSurface_FileLoadDialogResponse");
             bindFunc(cast(void**)&SteamAPI_ISteamInventory_GetResultStatus, "SteamAPI_ISteamInventory_GetResultStatus");
             bindFunc(cast(void**)&SteamAPI_ISteamInventory_GetResultItems, "SteamAPI_ISteamInventory_GetResultItems");
             bindFunc(cast(void**)&SteamAPI_ISteamInventory_GetResultTimestamp, "SteamAPI_ISteamInventory_GetResultTimestamp");

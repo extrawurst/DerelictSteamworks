@@ -6,7 +6,7 @@ enum STEAM_CONTROLLER_MAX_COUNT = 16;
 
 enum STEAM_CONTROLLER_MAX_ANALOG_ACTIONS = 16;
 
-enum STEAM_CONTROLLER_MAX_DIGITAL_ACTIONS = 32;
+enum STEAM_CONTROLLER_MAX_DIGITAL_ACTIONS = 128;
 
 enum STEAM_CONTROLLER_MAX_ORIGINS = 8;
 
@@ -32,7 +32,8 @@ enum EControllerSource
     k_EControllerSource_Switch,
     k_EControllerSource_LeftTrigger,
     k_EControllerSource_RightTrigger,
-    k_EControllerSource_Gyro
+    k_EControllerSource_Gyro,
+    k_EControllerSource_Count
 }
 
 enum EControllerSourceMode
@@ -47,7 +48,9 @@ enum EControllerSourceMode
     k_EControllerSourceMode_JoystickCamera,
     k_EControllerSourceMode_ScrollWheel,
     k_EControllerSourceMode_Trigger,
-    k_EControllerSourceMode_TouchMenu
+    k_EControllerSourceMode_TouchMenu,
+    k_EControllerSourceMode_MouseJoystick,
+    k_EControllerSourceMode_MouseRegion
 }
 
 enum EControllerActionOrigin
