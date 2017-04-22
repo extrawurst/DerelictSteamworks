@@ -1,6 +1,6 @@
 # DerelictSteamworks [![Build Status](https://travis-ci.org/Extrawurst/DerelictSteamworks.svg)](https://travis-ci.org/Extrawurst/DerelictSteamworks)
 
-Supports Steamworks flat-api SDK: 1.36 (from 02/09/2016)
+Supports Steamworks flat-api SDK: 1.37 (from 05/23/2016)
 
 *work in progress*
 
