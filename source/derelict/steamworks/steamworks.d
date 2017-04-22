@@ -90,7 +90,6 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamClient_GetISteamNetworking, "SteamAPI_ISteamClient_GetISteamNetworking");
             bindFunc(cast(void**)&SteamAPI_ISteamClient_GetISteamRemoteStorage, "SteamAPI_ISteamClient_GetISteamRemoteStorage");
             bindFunc(cast(void**)&SteamAPI_ISteamClient_GetISteamScreenshots, "SteamAPI_ISteamClient_GetISteamScreenshots");
-            bindFunc(cast(void**)&SteamAPI_ISteamClient_RunFrame, "SteamAPI_ISteamClient_RunFrame");
             bindFunc(cast(void**)&SteamAPI_ISteamClient_GetIPCCallCount, "SteamAPI_ISteamClient_GetIPCCallCount");
             bindFunc(cast(void**)&SteamAPI_ISteamClient_SetWarningMessageHook, "SteamAPI_ISteamClient_SetWarningMessageHook");
             bindFunc(cast(void**)&SteamAPI_ISteamClient_BShutdownIfAllPipesClosed, "SteamAPI_ISteamClient_BShutdownIfAllPipesClosed");
@@ -102,9 +101,6 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamClient_GetISteamMusic, "SteamAPI_ISteamClient_GetISteamMusic");
             bindFunc(cast(void**)&SteamAPI_ISteamClient_GetISteamMusicRemote, "SteamAPI_ISteamClient_GetISteamMusicRemote");
             bindFunc(cast(void**)&SteamAPI_ISteamClient_GetISteamHTMLSurface, "SteamAPI_ISteamClient_GetISteamHTMLSurface");
-            bindFunc(cast(void**)&SteamAPI_ISteamClient_Set_SteamAPI_CPostAPIResultInProcess, "SteamAPI_ISteamClient_Set_SteamAPI_CPostAPIResultInProcess");
-            bindFunc(cast(void**)&SteamAPI_ISteamClient_Remove_SteamAPI_CPostAPIResultInProcess, "SteamAPI_ISteamClient_Remove_SteamAPI_CPostAPIResultInProcess");
-            bindFunc(cast(void**)&SteamAPI_ISteamClient_Set_SteamAPI_CCheckCallbackRegisteredInProcess, "SteamAPI_ISteamClient_Set_SteamAPI_CCheckCallbackRegisteredInProcess");
             bindFunc(cast(void**)&SteamAPI_ISteamClient_GetISteamInventory, "SteamAPI_ISteamClient_GetISteamInventory");
             bindFunc(cast(void**)&SteamAPI_ISteamClient_GetISteamVideo, "SteamAPI_ISteamClient_GetISteamVideo");
             
@@ -133,6 +129,8 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamUser_GetGameBadgeLevel, "SteamAPI_ISteamUser_GetGameBadgeLevel");
             bindFunc(cast(void**)&SteamAPI_ISteamUser_GetPlayerSteamLevel, "SteamAPI_ISteamUser_GetPlayerSteamLevel");
             bindFunc(cast(void**)&SteamAPI_ISteamUser_RequestStoreAuthURL, "SteamAPI_ISteamUser_RequestStoreAuthURL");
+            bindFunc(cast(void**)&SteamAPI_ISteamUser_BIsPhoneVerified, "SteamAPI_ISteamUser_BIsPhoneVerified");
+            bindFunc(cast(void**)&SteamAPI_ISteamUser_BIsTwoFactorEnabled, "SteamAPI_ISteamUser_BIsTwoFactorEnabled");
 
             bindFunc(cast(void**)&SteamAPI_ISteamFriends_GetPersonaName, "SteamAPI_ISteamFriends_GetPersonaName");
             bindFunc(cast(void**)&SteamAPI_ISteamFriends_SetPersonaName, "SteamAPI_ISteamFriends_SetPersonaName");
@@ -219,7 +217,6 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamUtils_IsAPICallCompleted, "SteamAPI_ISteamUtils_IsAPICallCompleted");
             bindFunc(cast(void**)&SteamAPI_ISteamUtils_GetAPICallFailureReason, "SteamAPI_ISteamUtils_GetAPICallFailureReason");
             bindFunc(cast(void**)&SteamAPI_ISteamUtils_GetAPICallResult, "SteamAPI_ISteamUtils_GetAPICallResult");
-            bindFunc(cast(void**)&SteamAPI_ISteamUtils_RunFrame, "SteamAPI_ISteamUtils_RunFrame");
             bindFunc(cast(void**)&SteamAPI_ISteamUtils_GetIPCCallCount, "SteamAPI_ISteamUtils_GetIPCCallCount");
             bindFunc(cast(void**)&SteamAPI_ISteamUtils_SetWarningMessageHook, "SteamAPI_ISteamUtils_SetWarningMessageHook");
             bindFunc(cast(void**)&SteamAPI_ISteamUtils_IsOverlayEnabled, "SteamAPI_ISteamUtils_IsOverlayEnabled");
@@ -230,7 +227,9 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamUtils_GetEnteredGamepadTextInput, "SteamAPI_ISteamUtils_GetEnteredGamepadTextInput");
             bindFunc(cast(void**)&SteamAPI_ISteamUtils_GetSteamUILanguage, "SteamAPI_ISteamUtils_GetSteamUILanguage");
             bindFunc(cast(void**)&SteamAPI_ISteamUtils_IsSteamRunningInVR, "SteamAPI_ISteamUtils_IsSteamRunningInVR");
-            bindFunc(cast(void**)&SteamAPI_ISteamUtils_SetOverlayNotificationInset, "SteamAPI_ISteamUtils_SetOverlayNotificationInset"); 
+            bindFunc(cast(void**)&SteamAPI_ISteamUtils_SetOverlayNotificationInset, "SteamAPI_ISteamUtils_SetOverlayNotificationInset");
+            bindFunc(cast(void**)&SteamAPI_ISteamUtils_IsSteamInBigPictureMode, "SteamAPI_ISteamUtils_IsSteamInBigPictureMode");
+            bindFunc(cast(void**)&SteamAPI_ISteamUtils_StartVRDashboard, "SteamAPI_ISteamUtils_StartVRDashboard");
 
             bindFunc(cast(void**)&SteamAPI_ISteamMatchmaking_GetFavoriteGameCount, "SteamAPI_ISteamMatchmaking_GetFavoriteGameCount");
             bindFunc(cast(void**)&SteamAPI_ISteamMatchmaking_GetFavoriteGame, "SteamAPI_ISteamMatchmaking_GetFavoriteGame");
@@ -423,8 +422,7 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamApps_GetLaunchQueryParam, "SteamAPI_ISteamApps_GetLaunchQueryParam");
             bindFunc(cast(void**)&SteamAPI_ISteamApps_GetDlcDownloadProgress, "SteamAPI_ISteamApps_GetDlcDownloadProgress");
             bindFunc(cast(void**)&SteamAPI_ISteamApps_GetAppBuildId, "SteamAPI_ISteamApps_GetAppBuildId");
-            bindFunc(cast(void**)&SteamAPI_ISteamApps_RequestPublisherOwnedAppData, "SteamAPI_ISteamApps_RequestPublisherOwnedAppData");
-            bindFunc(cast(void**)&SteamAPI_ISteamApps_GetPublisherOwnedAppData, "SteamAPI_ISteamApps_GetPublisherOwnedAppData");
+            bindFunc(cast(void**)&SteamAPI_ISteamApps_RequestAllProofOfPurchaseKeys, "SteamAPI_ISteamApps_RequestAllProofOfPurchaseKeys");
             
             bindFunc(cast(void**)&SteamAPI_ISteamNetworking_SendP2PPacket, "SteamAPI_ISteamNetworking_SendP2PPacket");
             bindFunc(cast(void**)&SteamAPI_ISteamNetworking_IsP2PPacketAvailable, "SteamAPI_ISteamNetworking_IsP2PPacketAvailable");
@@ -591,6 +589,11 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_SetItemPreview, "SteamAPI_ISteamUGC_SetItemPreview");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_RemoveItemKeyValueTags, "SteamAPI_ISteamUGC_RemoveItemKeyValueTags");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_AddItemKeyValueTag, "SteamAPI_ISteamUGC_AddItemKeyValueTag");
+            bindFunc(cast(void**)&SteamAPI_ISteamUGC_AddItemPreviewFile, "SteamAPI_ISteamUGC_AddItemPreviewFile");
+            bindFunc(cast(void**)&SteamAPI_ISteamUGC_AddItemPreviewVideo, "SteamAPI_ISteamUGC_AddItemPreviewVideo");
+            bindFunc(cast(void**)&SteamAPI_ISteamUGC_UpdateItemPreviewFile, "SteamAPI_ISteamUGC_UpdateItemPreviewFile");
+            bindFunc(cast(void**)&SteamAPI_ISteamUGC_UpdateItemPreviewVideo, "SteamAPI_ISteamUGC_UpdateItemPreviewVideo");
+            bindFunc(cast(void**)&SteamAPI_ISteamUGC_RemoveItemPreview, "SteamAPI_ISteamUGC_RemoveItemPreview");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_SubmitItemUpdate, "SteamAPI_ISteamUGC_SubmitItemUpdate");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_GetItemUpdateProgress, "SteamAPI_ISteamUGC_GetItemUpdateProgress");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_SetUserItemVote, "SteamAPI_ISteamUGC_SetUserItemVote");

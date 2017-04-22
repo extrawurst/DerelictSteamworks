@@ -6,7 +6,7 @@ import derelict.steamworks.steamworks;
 nothrow extern(C) void warnCallback(int severity, const char * str)
 {
     try writefln("WARN: %s",str);
-    catch{}
+    catch(Throwable){}
 }
 
 bool getApiCallResult(T)(ISteamUtils* utils, SteamAPICall_t apicall, ref T resultData, bool* failed)

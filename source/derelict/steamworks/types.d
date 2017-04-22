@@ -55,7 +55,6 @@ alias AppId_t = uint32;
 extern(C) nothrow 
 {
     alias SteamAPIWarningMessageHook_t = void function(int, const char *);
-    alias SteamAPI_PostAPIResultInProcess_t = void function(SteamAPICall_t callHandle, void *, uint32 unCallbackSize, int iCallbackNum);
     alias SteamAPI_CheckCallbackRegistered_t = uint32 function( int iCallbackNum );
 }
 
@@ -166,7 +165,7 @@ interface ISteamMatchmakingRulesResponse
 }
 
 static immutable const(char)* STEAMAPPLIST_INTERFACE_VERSION = "STEAMAPPLIST_INTERFACE_VERSION001";
-static immutable const(char)* STEAMAPPS_INTERFACE_VERSION = "STEAMAPPS_INTERFACE_VERSION007";
+static immutable const(char)* STEAMAPPS_INTERFACE_VERSION = "STEAMAPPS_INTERFACE_VERSION008";
 static immutable const(char)* STEAMAPPTICKET_INTERFACE_VERSION = "STEAMAPPTICKET_INTERFACE_VERSION001";
 static immutable const(char)* STEAMCLIENT_INTERFACE_VERSION = "SteamClient017";
 static immutable const(char)* STEAMFRIENDS_INTERFACE_VERSION = "SteamFriends015";
@@ -184,9 +183,9 @@ static immutable const(char)* STEAMNETWORKING_INTERFACE_VERSION = "SteamNetworki
 static immutable const(char)* STEAMSCREENSHOTS_INTERFACE_VERSION = "STEAMSCREENSHOTS_INTERFACE_VERSION002";
 static immutable const(char)* STEAMUGC_INTERFACE_VERSION = "STEAMUGC_INTERFACE_VERSION007";
 static immutable const(char)* STEAMUNIFIEDMESSAGES_INTERFACE_VERSION = "STEAMUNIFIEDMESSAGES_INTERFACE_VERSION001";
-static immutable const(char)* STEAMUSER_INTERFACE_VERSION = "SteamUser018";
+static immutable const(char)* STEAMUSER_INTERFACE_VERSION = "SteamUser019";
 static immutable const(char)* STEAMUSERSTATS_INTERFACE_VERSION = "STEAMUSERSTATS_INTERFACE_VERSION011";
-static immutable const(char)* STEAMUTILS_INTERFACE_VERSION = "SteamUtils007";
+static immutable const(char)* STEAMUTILS_INTERFACE_VERSION = "SteamUtils008";
 static immutable const(char)* STEAMVIDEO_INTERFACE_VERSION = "STEAMVIDEO_INTERFACE_V001";
 
 static immutable uint32 k_cchPublishedDocumentTitleMax = 128 + 1;

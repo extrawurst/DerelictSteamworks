@@ -61,6 +61,7 @@ enum EChatEntryType
     k_EChatEntryTypeHistoricalChat = 11,    // a chat message from user's chat history or offilne message
     k_EChatEntryTypeReserved1 = 12,
     k_EChatEntryTypeReserved2 = 13,
+    k_EChatEntryTypeLinkBlocked = 14, // a link was removed by the chat filter.
 }
 
 enum EFriendRelationship
@@ -413,13 +414,14 @@ enum ISteamHTMLSurface_EHTMLKeyModifiers
 
 enum EHTTPMethod
 {
-    k_EHTTPMethodInvalid = 0,
-    k_EHTTPMethodGET = 1,
-    k_EHTTPMethodHEAD = 2,
-    k_EHTTPMethodPOST = 3,
-    k_EHTTPMethodPUT = 4,
-    k_EHTTPMethodDELETE = 5,
-    k_EHTTPMethodOPTIONS = 6,
+    k_EHTTPMethodInvalid,
+    k_EHTTPMethodGET,
+    k_EHTTPMethodHEAD,
+    k_EHTTPMethodPOST,
+    k_EHTTPMethodPUT,
+    k_EHTTPMethodDELETE,
+    k_EHTTPMethodOPTIONS,
+    k_EHTTPMethodPATCH,
 }
 
 enum EResult
@@ -524,6 +526,11 @@ enum EResult
     k_EResultRefundToWallet = 98,               // Cannot refund to payment method, must use wallet
     k_EResultEmailSendFailure = 99,             // Cannot send an email
     k_EResultNotSettled = 100,                  // Can't perform operation till payment has settled
+    k_EResultNeedCaptcha = 101,					// Needs to provide a valid captcha
+ 	k_EResultGSLTDenied = 102,					// a game server login token owned by this token's owner has been banned
+ 	k_EResultGSOwnerDenied = 103,				// game server owner is denied for other reason (account lock, community ban, vac ban, missing phone)
+ 	k_EResultInvalidItemType = 104,				// the type of thing we were requested to act on is invalid
+    k_EResultIPBanned = 105,
 }
 
 enum EUGCQuery
@@ -653,8 +660,8 @@ enum k_iSteamAppListCallbacks = 3900;
 enum k_iSteamMusicCallbacks = 4000;
 enum k_iSteamMusicRemoteCallbacks = 4100;
 enum k_iClientVRCallbacks = 4200;
-enum k_iClientReservedCallbacks = 4300;
-enum k_iSteamReservedCallbacks = 4400;
+enum k_iClientGameNotificationCallbacks = 4300;
+enum k_iSteamGameNotificationCallbacks = 4400;
 enum k_iSteamHTMLSurfaceCallbacks = 4500;
 enum k_iClientVideoCallbacks = 4600;
 enum k_iClientInventoryCallbacks = 4700;
