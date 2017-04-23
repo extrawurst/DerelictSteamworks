@@ -42,6 +42,9 @@ public
     import derelict.steamworks.steamremotestorage;
     import derelict.steamworks.steamuser;
     import derelict.steamworks.steamclientpublic;
+    import derelict.steamworks.steaminventory;
+    import derelict.steamworks.steamscreenshots;
+    import derelict.steamworks.steamugc;
 }
 
 private
@@ -551,11 +554,15 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamController_StopAnalogActionMomentum, "SteamAPI_ISteamController_StopAnalogActionMomentum");
             bindFunc(cast(void**)&SteamAPI_ISteamController_TriggerHapticPulse, "SteamAPI_ISteamController_TriggerHapticPulse");
             bindFunc(cast(void**)&SteamAPI_ISteamController_TriggerRepeatedHapticPulse, "SteamAPI_ISteamController_TriggerRepeatedHapticPulse");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_TriggerVibration, "SteamAPI_ISteamController_TriggerVibration");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_SetLEDColor, "SteamAPI_ISteamController_SetLEDColor");
             bindFunc(cast(void**)&SteamAPI_ISteamController_GetGamepadIndexForController, "SteamAPI_ISteamController_GetGamepadIndexForController");
             bindFunc(cast(void**)&SteamAPI_ISteamController_GetControllerForGamepadIndex, "SteamAPI_ISteamController_GetControllerForGamepadIndex");
             bindFunc(cast(void**)&SteamAPI_ISteamController_GetMotionData, "SteamAPI_ISteamController_GetMotionData");
             bindFunc(cast(void**)&SteamAPI_ISteamController_ShowDigitalActionOrigins, "SteamAPI_ISteamController_ShowDigitalActionOrigins");
             bindFunc(cast(void**)&SteamAPI_ISteamController_ShowAnalogActionOrigins, "SteamAPI_ISteamController_ShowAnalogActionOrigins");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_GetStringForActionOrigin, "SteamAPI_ISteamController_GetStringForActionOrigin");
+            bindFunc(cast(void**)&SteamAPI_ISteamController_GetGlyphForActionOrigin, "SteamAPI_ISteamController_GetGlyphForActionOrigin");
 
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_CreateQueryUserUGCRequest, "SteamAPI_ISteamUGC_CreateQueryUserUGCRequest");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_CreateQueryAllUGCRequest, "SteamAPI_ISteamUGC_CreateQueryAllUGCRequest");
@@ -687,6 +694,9 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamInventory_LoadItemDefinitions, "SteamAPI_ISteamInventory_LoadItemDefinitions");
             bindFunc(cast(void**)&SteamAPI_ISteamInventory_GetItemDefinitionIDs, "SteamAPI_ISteamInventory_GetItemDefinitionIDs");
             bindFunc(cast(void**)&SteamAPI_ISteamInventory_GetItemDefinitionProperty, "SteamAPI_ISteamInventory_GetItemDefinitionProperty");
+            bindFunc(cast(void**)&SteamAPI_ISteamInventory_RequestEligiblePromoItemDefinitionsIDs, "SteamAPI_ISteamInventory_RequestEligiblePromoItemDefinitionsIDs");
+            bindFunc(cast(void**)&SteamAPI_ISteamInventory_GetEligiblePromoItemDefinitionIDs, "SteamAPI_ISteamInventory_GetEligiblePromoItemDefinitionIDs");
+
             bindFunc(cast(void**)&SteamAPI_ISteamVideo_GetVideoURL, "SteamAPI_ISteamVideo_GetVideoURL");
             bindFunc(cast(void**)&SteamAPI_ISteamVideo_IsBroadcasting, "SteamAPI_ISteamVideo_IsBroadcasting");
             bindFunc(cast(void**)&SteamAPI_ISteamGameServer_InitGameServer, "SteamAPI_ISteamGameServer_InitGameServer");

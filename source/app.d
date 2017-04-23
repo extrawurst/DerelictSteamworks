@@ -14,6 +14,33 @@ bool getApiCallResult(T)(ISteamUtils* utils, SteamAPICall_t apicall, ref T resul
     return SteamAPI_ISteamUtils_GetAPICallResult(utils, apicall, &resultData, resultData.sizeof, T.k_iCallback, failed);
 }
 
+void testInventory(intptr_t user, HSteamUser usrPipe, HSteamPipe pipe, uint64 userId)
+{
+    auto inventory = SteamAPI_ISteamClient_GetISteamInventory(user, usrPipe, pipe, STEAMINVENTORY_INTERFACE_VERSION);
+            
+    assert(inventory);
+
+    auto apicall = SteamAPI_ISteamInventory_RequestEligiblePromoItemDefinitionsIDs(inventory,userId);
+
+    assert(apicall);
+
+    bool failed;
+    while(!SteamAPI_ISteamUtils_IsAPICallCompleted(utils, apicall, &failed))
+    {
+        //writefln("[inventory] wait for api call to complete (%s)", failed);
+    }
+
+    writefln("[inventory] api call completed (failed: %s)", failed);
+
+    SteamInventoryEligiblePromoItemDefIDs_t resultData;
+
+    auto myres = getApiCallResult(utils, apicall, resultData, &failed);
+
+    writefln("[inventory] res: %s", resultData);
+}
+
+ISteamUtils* utils;
+
 void main()
 {
 	writeln("startup");
@@ -29,18 +56,22 @@ void main()
 
     if(res)
     {
+        uint64 userId;
+
         auto client = SteamClient();
 
         auto pipe = SteamAPI_ISteamClient_CreateSteamPipe(client);
 
         assert(pipe != 0);
 
-        auto utils = SteamAPI_ISteamClient_GetISteamUtils(client, pipe, STEAMUTILS_INTERFACE_VERSION);
+        utils = SteamAPI_ISteamClient_GetISteamUtils(client, pipe, STEAMUTILS_INTERFACE_VERSION);
         
         assert(utils);
 
         {
             SteamAPI_ISteamUtils_SetWarningMessageHook(utils, &warnCallback);
+
+            writefln("appid: %s",SteamAPI_ISteamUtils_GetAppID(utils));
 
             writefln("seconds since start: %s(%s)",SteamAPI_ISteamUtils_GetSecondsSinceComputerActive(utils), SteamAPI_ISteamUtils_GetSecondsSinceAppActive(utils));
             
@@ -63,6 +94,10 @@ void main()
             assert(usr);
 
             writefln("steam usr loggedIn: %s",SteamAPI_ISteamUser_BLoggedOn(usr));
+
+            userId = SteamAPI_ISteamUser_GetSteamID(usr);
+
+            writefln("steam usr id: %s",SteamAPI_ISteamUser_GetSteamID(usr));
 
             char[256] buff;
             res = SteamAPI_ISteamUser_GetUserDataFolder(usr,buff.ptr, 256);
@@ -213,6 +248,8 @@ void main()
 
             writefln("[apps] AvailableGameLanguages: %s", to!string(langsAvail));
         }
+
+        testInventory(client,usrPipe,pipe,userId);
     }
 
     SteamAPI_Shutdown();

@@ -530,11 +530,15 @@ private
     alias da_SteamAPI_ISteamController_StopAnalogActionMomentum = void function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t eAction);
     alias da_SteamAPI_ISteamController_TriggerHapticPulse = void function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, ushort usDurationMicroSec);
     alias da_SteamAPI_ISteamController_TriggerRepeatedHapticPulse = void function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, ushort usDurationMicroSec, ushort usOffMicroSec, ushort unRepeat, uint nFlags);
+    alias da_SteamAPI_ISteamController_TriggerVibration = void function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ushort usLeftSpeed, ushort usRightSpeed);
+    alias da_SteamAPI_ISteamController_SetLEDColor = void function(intptr_t instancePtr, ControllerHandle_t controllerHandle, uint8 nColorR, uint8 nColorG, uint8 nColorB, uint nFlags);
     alias da_SteamAPI_ISteamController_GetGamepadIndexForController = int function(intptr_t instancePtr, ControllerHandle_t ulControllerHandle);
     alias da_SteamAPI_ISteamController_GetControllerForGamepadIndex = ControllerHandle_t function(intptr_t instancePtr, int nIndex);
     alias da_SteamAPI_ISteamController_GetMotionData = ControllerMotionData_t function(intptr_t instancePtr, ControllerHandle_t controllerHandle);
     alias da_SteamAPI_ISteamController_ShowDigitalActionOrigins = bool function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle, float flScale, float flXPosition, float flYPosition);
     alias da_SteamAPI_ISteamController_ShowAnalogActionOrigins = bool function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle, float flScale, float flXPosition, float flYPosition);
+    alias da_SteamAPI_ISteamController_GetStringForActionOrigin = const(char)* function(intptr_t instancePtr, EControllerActionOrigin eOrigin);
+    alias da_SteamAPI_ISteamController_GetGlyphForActionOrigin = const(char)* function(intptr_t instancePtr, EControllerActionOrigin eOrigin);
 
     alias da_SteamAPI_ISteamUGC_CreateQueryUserUGCRequest = UGCQueryHandle_t function(intptr_t instancePtr, AccountID_t unAccountID, EUserUGCList eListType, EUGCMatchingUGCType eMatchingUGCType, EUserUGCListSortOrder eSortOrder, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage);
     alias da_SteamAPI_ISteamUGC_CreateQueryAllUGCRequest = UGCQueryHandle_t function(intptr_t instancePtr, EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage);
@@ -669,6 +673,8 @@ private
     alias da_SteamAPI_ISteamInventory_LoadItemDefinitions = bool function(intptr_t instancePtr);
     alias da_SteamAPI_ISteamInventory_GetItemDefinitionIDs = bool function(intptr_t instancePtr, SteamItemDef_t * pItemDefIDs, uint32 * punItemDefIDsArraySize);
     alias da_SteamAPI_ISteamInventory_GetItemDefinitionProperty = bool function(intptr_t instancePtr, SteamItemDef_t iDefinition, const(char)* pchPropertyName, char* pchValueBuffer, uint32* punValueBufferSizeOut);
+    alias da_SteamAPI_ISteamInventory_RequestEligiblePromoItemDefinitionsIDs = SteamAPICall_t function(intptr_t instancePtr, CSteamID steamID);
+    alias da_SteamAPI_ISteamInventory_GetEligiblePromoItemDefinitionIDs = bool function(intptr_t instancePtr, CSteamID steamID, SteamItemDef_t * pItemDefIDs, uint32 * punItemDefIDsArraySize);
 
     alias da_SteamAPI_ISteamVideo_GetVideoURL = void function(intptr_t instancePtr, AppId_t unVideoAppID);
     alias da_SteamAPI_ISteamVideo_IsBroadcasting = bool function(intptr_t instancePtr, int * pnNumViewers);
@@ -1218,11 +1224,15 @@ __gshared
     da_SteamAPI_ISteamController_StopAnalogActionMomentum SteamAPI_ISteamController_StopAnalogActionMomentum;
     da_SteamAPI_ISteamController_TriggerHapticPulse SteamAPI_ISteamController_TriggerHapticPulse;
     da_SteamAPI_ISteamController_TriggerRepeatedHapticPulse SteamAPI_ISteamController_TriggerRepeatedHapticPulse;
+    da_SteamAPI_ISteamController_TriggerVibration SteamAPI_ISteamController_TriggerVibration;
+    da_SteamAPI_ISteamController_SetLEDColor SteamAPI_ISteamController_SetLEDColor;
     da_SteamAPI_ISteamController_GetGamepadIndexForController SteamAPI_ISteamController_GetGamepadIndexForController;
     da_SteamAPI_ISteamController_GetControllerForGamepadIndex SteamAPI_ISteamController_GetControllerForGamepadIndex;
     da_SteamAPI_ISteamController_GetMotionData SteamAPI_ISteamController_GetMotionData;
     da_SteamAPI_ISteamController_ShowDigitalActionOrigins SteamAPI_ISteamController_ShowDigitalActionOrigins;
     da_SteamAPI_ISteamController_ShowAnalogActionOrigins SteamAPI_ISteamController_ShowAnalogActionOrigins;
+    da_SteamAPI_ISteamController_GetStringForActionOrigin SteamAPI_ISteamController_GetStringForActionOrigin;
+    da_SteamAPI_ISteamController_GetGlyphForActionOrigin SteamAPI_ISteamController_GetGlyphForActionOrigin;
 
     da_SteamAPI_ISteamUGC_CreateQueryUserUGCRequest SteamAPI_ISteamUGC_CreateQueryUserUGCRequest;
     da_SteamAPI_ISteamUGC_CreateQueryAllUGCRequest SteamAPI_ISteamUGC_CreateQueryAllUGCRequest;
@@ -1356,6 +1366,8 @@ __gshared
     da_SteamAPI_ISteamInventory_LoadItemDefinitions SteamAPI_ISteamInventory_LoadItemDefinitions;
     da_SteamAPI_ISteamInventory_GetItemDefinitionIDs SteamAPI_ISteamInventory_GetItemDefinitionIDs;
     da_SteamAPI_ISteamInventory_GetItemDefinitionProperty SteamAPI_ISteamInventory_GetItemDefinitionProperty;
+    da_SteamAPI_ISteamInventory_RequestEligiblePromoItemDefinitionsIDs SteamAPI_ISteamInventory_RequestEligiblePromoItemDefinitionsIDs;
+    da_SteamAPI_ISteamInventory_GetEligiblePromoItemDefinitionIDs SteamAPI_ISteamInventory_GetEligiblePromoItemDefinitionIDs;
 
     da_SteamAPI_ISteamVideo_GetVideoURL SteamAPI_ISteamVideo_GetVideoURL;
     da_SteamAPI_ISteamVideo_IsBroadcasting SteamAPI_ISteamVideo_IsBroadcasting;
