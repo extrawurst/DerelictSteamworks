@@ -15,4 +15,6 @@ enum EItemPreviewType
 																// +---+---+---+---+
 	k_EItemPreviewType_EnvironmentMap_LatLong			= 4,	// standard image file expected
 	k_EItemPreviewType_ReservedMax						= 255,	// you can specify your own types above this value
-};
+}
+
+static immutable const(char)* STEAMUGC_INTERFACE_VERSION = "STEAMUGC_INTERFACE_VERSION009";

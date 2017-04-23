@@ -20,4 +20,4 @@ struct RemoteStorageFileReadAsyncComplete_t
     uint32 m_cubRead;                       // amount read - will the <= the amount requested
 }
 
-static immutable const(char)* STEAMREMOTESTORAGE_INTERFACE_VERSION = "STEAMREMOTESTORAGE_INTERFACE_VERSION013";
+static immutable const(char)* STEAMREMOTESTORAGE_INTERFACE_VERSION = "STEAMREMOTESTORAGE_INTERFACE_VERSION014";

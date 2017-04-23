@@ -168,8 +168,8 @@ void main()
 
             assert(remotestore);
 
-            int32 total;
-            int32 avail;
+            uint64 total;
+            uint64 avail;
             auto qres = SteamAPI_ISteamRemoteStorage_GetQuota(remotestore, &total, &avail);
 
             assert(qres);

@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the names 'Derelict', 'DerelictILUT', nor the names of its contributors
+ * * Neither the names 'Derelict', 'DerelictSteamworks', nor the names of its contributors
  *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
@@ -39,6 +39,7 @@ private
     import derelict.steamworks.structs;
     import derelict.steamworks.steamcontroller;
     import derelict.steamworks.steamugc;
+    import derelict.steamworks.steamscreenshots;
 }
 
 @nogc nothrow extern(C)
@@ -109,6 +110,8 @@ private
     alias da_SteamAPI_ISteamUser_RequestStoreAuthURL = SteamAPICall_t function(intptr_t instancePtr, const(char)* pchRedirectURL);
     alias da_SteamAPI_ISteamUser_BIsPhoneVerified = bool function(intptr_t instancePtr);
     alias da_SteamAPI_ISteamUser_BIsTwoFactorEnabled = bool function(intptr_t instancePtr);
+    alias da_SteamAPI_ISteamUser_BIsPhoneIdentifying = bool function(intptr_t instancePtr);
+    alias da_SteamAPI_ISteamUser_BIsPhoneRequiringVerification = bool function(intptr_t instancePtr);
 
     alias da_SteamAPI_ISteamFriends_GetPersonaName = const(char)* function(intptr_t instancePtr);
     alias da_SteamAPI_ISteamFriends_SetPersonaName = SteamAPICall_t function(intptr_t instancePtr, const(char)* pchPersonaName);
@@ -296,7 +299,7 @@ private
     alias da_SteamAPI_ISteamRemoteStorage_GetSyncPlatforms = ERemoteStoragePlatform function(intptr_t instancePtr, const(char)* pchFile);
     alias da_SteamAPI_ISteamRemoteStorage_GetFileCount = int32 function(intptr_t instancePtr);
     alias da_SteamAPI_ISteamRemoteStorage_GetFileNameAndSize = const(char)* function(intptr_t instancePtr, int iFile, int32 * pnFileSizeInBytes);
-    alias da_SteamAPI_ISteamRemoteStorage_GetQuota = bool function(intptr_t instancePtr, int32 * pnTotalBytes, int32 * puAvailableBytes);
+    alias da_SteamAPI_ISteamRemoteStorage_GetQuota = bool function(intptr_t instancePtr, uint64* pnTotalBytes, uint64* puAvailableBytes);
     alias da_SteamAPI_ISteamRemoteStorage_IsCloudEnabledForAccount = bool function(intptr_t instancePtr);
     alias da_SteamAPI_ISteamRemoteStorage_IsCloudEnabledForApp = bool function(intptr_t instancePtr);
     alias da_SteamAPI_ISteamRemoteStorage_SetCloudEnabledForApp = void function(intptr_t instancePtr, bool bEnabled);
@@ -401,6 +404,7 @@ private
     alias da_SteamAPI_ISteamApps_GetDlcDownloadProgress = bool function(intptr_t instancePtr, AppId_t nAppID, uint64 * punBytesDownloaded, uint64 * punBytesTotal);
     alias da_SteamAPI_ISteamApps_GetAppBuildId = int function(intptr_t instancePtr);
     alias da_SteamAPI_ISteamApps_RequestAllProofOfPurchaseKeys = void function(intptr_t instancePtr);
+    alias da_SteamAPI_ISteamApps_GetFileDetails = SteamAPICall_t function(intptr_t instancePtr, const(char)* pszFileName);
 
     alias da_SteamAPI_ISteamNetworking_SendP2PPacket = bool function(intptr_t instancePtr, CSteamID steamIDRemote, const void * pubData, uint32 cubData, EP2PSend eP2PSendType, int nChannel);
     alias da_SteamAPI_ISteamNetworking_IsP2PPacketAvailable = bool function(intptr_t instancePtr, uint32 * pcubMsgSize, int nChannel);
@@ -432,6 +436,8 @@ private
     alias da_SteamAPI_ISteamScreenshots_SetLocation = bool function(intptr_t instancePtr, ScreenshotHandle hScreenshot, const(char)* pchLocation);
     alias da_SteamAPI_ISteamScreenshots_TagUser = bool function(intptr_t instancePtr, ScreenshotHandle hScreenshot, CSteamID steamID);
     alias da_SteamAPI_ISteamScreenshots_TagPublishedFile = bool function(intptr_t instancePtr, ScreenshotHandle hScreenshot, PublishedFileId_t unPublishedFileID);
+    alias da_SteamAPI_ISteamScreenshots_IsScreenshotsHooked = bool function(intptr_t instancePtr);
+    alias da_SteamAPI_ISteamScreenshots_AddVRScreenshotToLibrary = ScreenshotHandle function(intptr_t instancePtr, EVRScreenshotType eType, const(char)* pchFilename, const(char)* pchVRFilename);
 
     alias da_SteamAPI_ISteamMusic_BIsEnabled = bool function(intptr_t instancePtr);
     alias da_SteamAPI_ISteamMusic_BIsPlaying = bool function(intptr_t instancePtr);
@@ -524,6 +530,11 @@ private
     alias da_SteamAPI_ISteamController_StopAnalogActionMomentum = void function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t eAction);
     alias da_SteamAPI_ISteamController_TriggerHapticPulse = void function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, ushort usDurationMicroSec);
     alias da_SteamAPI_ISteamController_TriggerRepeatedHapticPulse = void function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, ushort usDurationMicroSec, ushort usOffMicroSec, ushort unRepeat, uint nFlags);
+    alias da_SteamAPI_ISteamController_GetGamepadIndexForController = int function(intptr_t instancePtr, ControllerHandle_t ulControllerHandle);
+    alias da_SteamAPI_ISteamController_GetControllerForGamepadIndex = ControllerHandle_t function(intptr_t instancePtr, int nIndex);
+    alias da_SteamAPI_ISteamController_GetMotionData = ControllerMotionData_t function(intptr_t instancePtr, ControllerHandle_t controllerHandle);
+    alias da_SteamAPI_ISteamController_ShowDigitalActionOrigins = bool function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle, float flScale, float flXPosition, float flYPosition);
+    alias da_SteamAPI_ISteamController_ShowAnalogActionOrigins = bool function(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle, float flScale, float flXPosition, float flYPosition);
 
     alias da_SteamAPI_ISteamUGC_CreateQueryUserUGCRequest = UGCQueryHandle_t function(intptr_t instancePtr, AccountID_t unAccountID, EUserUGCList eListType, EUGCMatchingUGCType eMatchingUGCType, EUserUGCListSortOrder eSortOrder, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage);
     alias da_SteamAPI_ISteamUGC_CreateQueryAllUGCRequest = UGCQueryHandle_t function(intptr_t instancePtr, EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage);
@@ -533,7 +544,7 @@ private
     alias da_SteamAPI_ISteamUGC_GetQueryUGCPreviewURL = bool function(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, char * pchURL, uint32 cchURLSize);
     alias da_SteamAPI_ISteamUGC_GetQueryUGCMetadata = bool function(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, char * pchMetadata, uint32 cchMetadatasize);
     alias da_SteamAPI_ISteamUGC_GetQueryUGCChildren = bool function(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, PublishedFileId_t * pvecPublishedFileID, uint32 cMaxEntries);
-    alias da_SteamAPI_ISteamUGC_GetQueryUGCStatistic = bool function(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint32 * pStatValue);
+    alias da_SteamAPI_ISteamUGC_GetQueryUGCStatistic = bool function(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint64 * pStatValue);
     alias da_SteamAPI_ISteamUGC_GetQueryUGCNumAdditionalPreviews = uint32 function(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index);
     alias da_SteamAPI_ISteamUGC_GetQueryUGCAdditionalPreview = bool function(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, char * pchURLOrVideoID, uint32 cchURLSize, char* pchOriginalFileName, uint32 cchOriginalFileNameSize, EItemPreviewType* pPreviewType);
     alias da_SteamAPI_ISteamUGC_GetQueryUGCNumKeyValueTags = uint32 function(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index);
@@ -541,6 +552,7 @@ private
     alias da_SteamAPI_ISteamUGC_ReleaseQueryUGCRequest = bool function(intptr_t instancePtr, UGCQueryHandle_t handle);
     alias da_SteamAPI_ISteamUGC_AddRequiredTag = bool function(intptr_t instancePtr, UGCQueryHandle_t handle, const(char)* pTagName);
     alias da_SteamAPI_ISteamUGC_AddExcludedTag = bool function(intptr_t instancePtr, UGCQueryHandle_t handle, const(char)* pTagName);
+    alias da_SteamAPI_ISteamUGC_SetReturnOnlyIDs = bool function(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnOnlyIDs);
     alias da_SteamAPI_ISteamUGC_SetReturnKeyValueTags = bool function(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnKeyValueTags);
     alias da_SteamAPI_ISteamUGC_SetReturnLongDescription = bool function(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnLongDescription);
     alias da_SteamAPI_ISteamUGC_SetReturnMetadata = bool function(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnMetadata);
@@ -589,6 +601,9 @@ private
     alias da_SteamAPI_ISteamUGC_DownloadItem = bool function(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, bool bHighPriority);
     alias da_SteamAPI_ISteamUGC_BInitWorkshopForGameServer = bool function(intptr_t instancePtr, DepotId_t unWorkshopDepotID, const(char)* pszFolder);
     alias da_SteamAPI_ISteamUGC_SuspendDownloads = void function(intptr_t instancePtr, bool bSuspend);
+    alias da_SteamAPI_ISteamUGC_StartPlaytimeTracking = SteamAPICall_t function(intptr_t instancePtr, PublishedFileId_t * pvecPublishedFileID, uint32 unNumPublishedFileIDs);
+    alias da_SteamAPI_ISteamUGC_StopPlaytimeTracking = SteamAPICall_t function(intptr_t instancePtr, PublishedFileId_t * pvecPublishedFileID, uint32 unNumPublishedFileIDs);
+    alias da_SteamAPI_ISteamUGC_StopPlaytimeTrackingForAllItems = SteamAPICall_t function(intptr_t instancePtr);
 
     alias da_SteamAPI_ISteamAppList_GetNumInstalledApps = uint32 function(intptr_t instancePtr);
     alias da_SteamAPI_ISteamAppList_GetInstalledApps = uint32 function(intptr_t instancePtr, AppId_t * pvecAppID, uint32 unMaxAppIDs);
@@ -653,7 +668,7 @@ private
     alias da_SteamAPI_ISteamInventory_TradeItems = bool function(intptr_t instancePtr, SteamInventoryResult_t * pResultHandle, CSteamID steamIDTradePartner, const SteamItemInstanceID_t * pArrayGive, const uint32 * pArrayGiveQuantity, uint32 nArrayGiveLength, const SteamItemInstanceID_t * pArrayGet, const uint32 * pArrayGetQuantity, uint32 nArrayGetLength);
     alias da_SteamAPI_ISteamInventory_LoadItemDefinitions = bool function(intptr_t instancePtr);
     alias da_SteamAPI_ISteamInventory_GetItemDefinitionIDs = bool function(intptr_t instancePtr, SteamItemDef_t * pItemDefIDs, uint32 * punItemDefIDsArraySize);
-    alias da_SteamAPI_ISteamInventory_GetItemDefinitionProperty = bool function(intptr_t instancePtr, SteamItemDef_t iDefinition, const(char)* pchPropertyName, char * pchValueBuffer, uint32 * punValueBufferSize);
+    alias da_SteamAPI_ISteamInventory_GetItemDefinitionProperty = bool function(intptr_t instancePtr, SteamItemDef_t iDefinition, const(char)* pchPropertyName, char* pchValueBuffer, uint32* punValueBufferSizeOut);
 
     alias da_SteamAPI_ISteamVideo_GetVideoURL = void function(intptr_t instancePtr, AppId_t unVideoAppID);
     alias da_SteamAPI_ISteamVideo_IsBroadcasting = bool function(intptr_t instancePtr, int * pnNumViewers);
@@ -782,6 +797,8 @@ __gshared
     da_SteamAPI_ISteamUser_RequestStoreAuthURL SteamAPI_ISteamUser_RequestStoreAuthURL;
     da_SteamAPI_ISteamUser_BIsPhoneVerified SteamAPI_ISteamUser_BIsPhoneVerified;
     da_SteamAPI_ISteamUser_BIsTwoFactorEnabled SteamAPI_ISteamUser_BIsTwoFactorEnabled;
+    da_SteamAPI_ISteamUser_BIsPhoneIdentifying SteamAPI_ISteamUser_BIsPhoneIdentifying;
+    da_SteamAPI_ISteamUser_BIsPhoneRequiringVerification SteamAPI_ISteamUser_BIsPhoneRequiringVerification;
 
     da_SteamAPI_ISteamFriends_GetPersonaName SteamAPI_ISteamFriends_GetPersonaName;
     da_SteamAPI_ISteamFriends_SetPersonaName SteamAPI_ISteamFriends_SetPersonaName;
@@ -1074,6 +1091,7 @@ __gshared
     da_SteamAPI_ISteamApps_GetDlcDownloadProgress SteamAPI_ISteamApps_GetDlcDownloadProgress;
     da_SteamAPI_ISteamApps_GetAppBuildId SteamAPI_ISteamApps_GetAppBuildId;
     da_SteamAPI_ISteamApps_RequestAllProofOfPurchaseKeys SteamAPI_ISteamApps_RequestAllProofOfPurchaseKeys;
+    da_SteamAPI_ISteamApps_GetFileDetails SteamAPI_ISteamApps_GetFileDetails;
 
     da_SteamAPI_ISteamNetworking_SendP2PPacket SteamAPI_ISteamNetworking_SendP2PPacket;
     da_SteamAPI_ISteamNetworking_IsP2PPacketAvailable SteamAPI_ISteamNetworking_IsP2PPacketAvailable;
@@ -1105,6 +1123,8 @@ __gshared
     da_SteamAPI_ISteamScreenshots_SetLocation SteamAPI_ISteamScreenshots_SetLocation;
     da_SteamAPI_ISteamScreenshots_TagUser SteamAPI_ISteamScreenshots_TagUser;
     da_SteamAPI_ISteamScreenshots_TagPublishedFile SteamAPI_ISteamScreenshots_TagPublishedFile;
+    da_SteamAPI_ISteamScreenshots_IsScreenshotsHooked SteamAPI_ISteamScreenshots_IsScreenshotsHooked;
+    da_SteamAPI_ISteamScreenshots_AddVRScreenshotToLibrary SteamAPI_ISteamScreenshots_AddVRScreenshotToLibrary;
 
     da_SteamAPI_ISteamMusic_BIsEnabled SteamAPI_ISteamMusic_BIsEnabled;
     da_SteamAPI_ISteamMusic_BIsPlaying SteamAPI_ISteamMusic_BIsPlaying;
@@ -1198,7 +1218,11 @@ __gshared
     da_SteamAPI_ISteamController_StopAnalogActionMomentum SteamAPI_ISteamController_StopAnalogActionMomentum;
     da_SteamAPI_ISteamController_TriggerHapticPulse SteamAPI_ISteamController_TriggerHapticPulse;
     da_SteamAPI_ISteamController_TriggerRepeatedHapticPulse SteamAPI_ISteamController_TriggerRepeatedHapticPulse;
-
+    da_SteamAPI_ISteamController_GetGamepadIndexForController SteamAPI_ISteamController_GetGamepadIndexForController;
+    da_SteamAPI_ISteamController_GetControllerForGamepadIndex SteamAPI_ISteamController_GetControllerForGamepadIndex;
+    da_SteamAPI_ISteamController_GetMotionData SteamAPI_ISteamController_GetMotionData;
+    da_SteamAPI_ISteamController_ShowDigitalActionOrigins SteamAPI_ISteamController_ShowDigitalActionOrigins;
+    da_SteamAPI_ISteamController_ShowAnalogActionOrigins SteamAPI_ISteamController_ShowAnalogActionOrigins;
 
     da_SteamAPI_ISteamUGC_CreateQueryUserUGCRequest SteamAPI_ISteamUGC_CreateQueryUserUGCRequest;
     da_SteamAPI_ISteamUGC_CreateQueryAllUGCRequest SteamAPI_ISteamUGC_CreateQueryAllUGCRequest;
@@ -1216,6 +1240,7 @@ __gshared
     da_SteamAPI_ISteamUGC_ReleaseQueryUGCRequest SteamAPI_ISteamUGC_ReleaseQueryUGCRequest;
     da_SteamAPI_ISteamUGC_AddRequiredTag SteamAPI_ISteamUGC_AddRequiredTag;
     da_SteamAPI_ISteamUGC_AddExcludedTag SteamAPI_ISteamUGC_AddExcludedTag;
+    da_SteamAPI_ISteamUGC_SetReturnOnlyIDs SteamAPI_ISteamUGC_SetReturnOnlyIDs;
     da_SteamAPI_ISteamUGC_SetReturnKeyValueTags SteamAPI_ISteamUGC_SetReturnKeyValueTags;
     da_SteamAPI_ISteamUGC_SetReturnLongDescription SteamAPI_ISteamUGC_SetReturnLongDescription;
     da_SteamAPI_ISteamUGC_SetReturnMetadata SteamAPI_ISteamUGC_SetReturnMetadata;
@@ -1263,6 +1288,9 @@ __gshared
     da_SteamAPI_ISteamUGC_DownloadItem SteamAPI_ISteamUGC_DownloadItem;
     da_SteamAPI_ISteamUGC_BInitWorkshopForGameServer SteamAPI_ISteamUGC_BInitWorkshopForGameServer;
     da_SteamAPI_ISteamUGC_SuspendDownloads SteamAPI_ISteamUGC_SuspendDownloads;
+    da_SteamAPI_ISteamUGC_StartPlaytimeTracking SteamAPI_ISteamUGC_StartPlaytimeTracking;
+    da_SteamAPI_ISteamUGC_StopPlaytimeTracking SteamAPI_ISteamUGC_StopPlaytimeTracking;
+    da_SteamAPI_ISteamUGC_StopPlaytimeTrackingForAllItems SteamAPI_ISteamUGC_StopPlaytimeTrackingForAllItems;
 
     da_SteamAPI_ISteamAppList_GetNumInstalledApps SteamAPI_ISteamAppList_GetNumInstalledApps;
     da_SteamAPI_ISteamAppList_GetInstalledApps SteamAPI_ISteamAppList_GetInstalledApps;

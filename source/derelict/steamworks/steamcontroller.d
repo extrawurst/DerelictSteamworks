@@ -50,7 +50,9 @@ enum EControllerSourceMode
     k_EControllerSourceMode_Trigger,
     k_EControllerSourceMode_TouchMenu,
     k_EControllerSourceMode_MouseJoystick,
-    k_EControllerSourceMode_MouseRegion
+    k_EControllerSourceMode_MouseRegion,
+    k_EControllerSourceMode_RadialMenu,
+    k_EControllerSourceMode_Switches
 }
 
 enum EControllerActionOrigin
@@ -98,6 +100,25 @@ enum EControllerActionOrigin
     k_EControllerActionOrigin_Count
 }
 
+struct ControllerMotionData_t
+{
+	// Sensor-fused absolute rotation; will drift in heading
+	float rotQuatX;
+	float rotQuatY;
+	float rotQuatZ;
+	float rotQuatW;
+	
+	// Positional acceleration
+	float posAccelX;
+	float posAccelY;
+	float posAccelZ;
+
+	// Angular velocity
+	float rotVelX;
+	float rotVelY;
+	float rotVelZ;
+}
+
 // ControllerHandle_t is used to refer to a specific controller.
 // This handle will consistently identify a controller, even if it is disconnected and re-connected
 alias ControllerHandle_t = uint64;
@@ -131,4 +152,4 @@ struct ControllerDigitalActionData_t
     bool bActive;
 }
 
-static immutable const(char)* STEAMCONTROLLER_INTERFACE_VERSION = "SteamController003";
+static immutable const(char)* STEAMCONTROLLER_INTERFACE_VERSION = "SteamController004";

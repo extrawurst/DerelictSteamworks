@@ -73,7 +73,7 @@ enum EFriendRelationship
     k_EFriendRelationshipRequestInitiator = 4,
     k_EFriendRelationshipIgnored = 5,
     k_EFriendRelationshipIgnoredFriend = 6,
-    k_EFriendRelationshipSuggested = 7,
+    k_EFriendRelationshipSuggested_DEPRECATED = 7,
     
     // keep this updated
     k_EFriendRelationshipMax = 8,
@@ -548,6 +548,12 @@ enum EUGCQuery
     k_EUGCQuery_RankedByVotesUp                               = 10,
     k_EUGCQuery_RankedByTextSearch                            = 11,
     k_EUGCQuery_RankedByTotalUniqueSubscriptions              = 12,
+    k_EUGCQuery_RankedByPlaytimeTrend						  = 13,
+    k_EUGCQuery_RankedByTotalPlaytime						  = 14,
+    k_EUGCQuery_RankedByAveragePlaytimeTrend				  = 15,
+    k_EUGCQuery_RankedByLifetimeAveragePlaytime				  = 16,
+    k_EUGCQuery_RankedByPlaytimeSessionsTrend				  = 17,
+    k_EUGCQuery_RankedByLifetimePlaytimeSessions			  = 18,
 }
 
 enum EUserUGCList
@@ -602,6 +608,9 @@ enum EItemStatistic
     k_EItemStatistic_NumUniqueFollowers     = 5,
     k_EItemStatistic_NumUniqueWebsiteViews  = 6,
     k_EItemStatistic_ReportScore            = 7,
+    k_EItemStatistic_NumSecondsPlayed		= 8,
+    k_EItemStatistic_NumPlaytimeSessions	= 9,
+    k_EItemStatistic_NumComments			= 10,
 }
 
 enum EItemUpdateStatus
