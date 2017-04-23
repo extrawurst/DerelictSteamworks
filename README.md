@@ -17,5 +17,5 @@ to be able to run the demo the steam api binary needs to be downloaded and put i
 
 # todo
 
-* support all callback types
-* refactor to the same file structure as in the original SDK to simplify updates
+* support all callback types (ongoing)
+* refactor to the same file structure as in the original SDK to simplify updates (ongoing)
