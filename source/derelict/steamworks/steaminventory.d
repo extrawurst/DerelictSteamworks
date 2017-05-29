@@ -12,4 +12,4 @@ align(1) struct SteamInventoryEligiblePromoItemDefIDs_t
 	bool m_bCachedData;	// indicates that the data was retrieved from the cache and not the server
 }
 
-static immutable const(char)* STEAMINVENTORY_INTERFACE_VERSION = "STEAMINVENTORY_INTERFACE_V001";
+static immutable const(char)* STEAMINVENTORY_INTERFACE_VERSION = "STEAMINVENTORY_INTERFACE_V002";

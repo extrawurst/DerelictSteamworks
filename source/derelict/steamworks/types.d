@@ -182,8 +182,7 @@ static immutable const(char)* STEAMNETWORKING_INTERFACE_VERSION = "SteamNetworki
 static immutable const(char)* STEAMUNIFIEDMESSAGES_INTERFACE_VERSION = "STEAMUNIFIEDMESSAGES_INTERFACE_VERSION001";
 static immutable const(char)* STEAMUSER_INTERFACE_VERSION = "SteamUser019";
 static immutable const(char)* STEAMUSERSTATS_INTERFACE_VERSION = "STEAMUSERSTATS_INTERFACE_VERSION011";
-static immutable const(char)* STEAMUTILS_INTERFACE_VERSION = "SteamUtils008";
-static immutable const(char)* STEAMVIDEO_INTERFACE_VERSION = "STEAMVIDEO_INTERFACE_V001";
+static immutable const(char)* STEAMVIDEO_INTERFACE_VERSION = "STEAMVIDEO_INTERFACE_V002";
 
 static immutable uint32 k_cchPublishedDocumentTitleMax = 128 + 1;
 static immutable uint32 k_cchPublishedDocumentDescriptionMax = 8000;

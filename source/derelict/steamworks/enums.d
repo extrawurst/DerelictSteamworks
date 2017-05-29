@@ -598,21 +598,6 @@ enum EUGCMatchingUGCType
     k_EUGCMatchingUGCType_All                = ~0,      // return everything
 }
 
-enum EItemStatistic
-{
-    k_EItemStatistic_NumSubscriptions       = 0,
-    k_EItemStatistic_NumFavorites           = 1,
-    k_EItemStatistic_NumFollowers           = 2,
-    k_EItemStatistic_NumUniqueSubscriptions = 3,
-    k_EItemStatistic_NumUniqueFavorites     = 4,
-    k_EItemStatistic_NumUniqueFollowers     = 5,
-    k_EItemStatistic_NumUniqueWebsiteViews  = 6,
-    k_EItemStatistic_ReportScore            = 7,
-    k_EItemStatistic_NumSecondsPlayed		= 8,
-    k_EItemStatistic_NumPlaytimeSessions	= 9,
-    k_EItemStatistic_NumComments			= 10,
-}
-
 enum EItemUpdateStatus
 {
     k_EItemUpdateStatusInvalid              = 0, // The item update handle was invalid, job might be finished, listen too SubmitItemUpdateResult_t

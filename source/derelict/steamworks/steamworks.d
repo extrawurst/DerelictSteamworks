@@ -235,6 +235,8 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamUtils_SetOverlayNotificationInset, "SteamAPI_ISteamUtils_SetOverlayNotificationInset");
             bindFunc(cast(void**)&SteamAPI_ISteamUtils_IsSteamInBigPictureMode, "SteamAPI_ISteamUtils_IsSteamInBigPictureMode");
             bindFunc(cast(void**)&SteamAPI_ISteamUtils_StartVRDashboard, "SteamAPI_ISteamUtils_StartVRDashboard");
+            bindFunc(cast(void**)&SteamAPI_ISteamUtils_IsVRHeadsetStreamingEnabled, "SteamAPI_ISteamUtils_IsVRHeadsetStreamingEnabled");
+            bindFunc(cast(void**)&SteamAPI_ISteamUtils_SetVRHeadsetStreamingEnabled, "SteamAPI_ISteamUtils_SetVRHeadsetStreamingEnabled");
 
             bindFunc(cast(void**)&SteamAPI_ISteamMatchmaking_GetFavoriteGameCount, "SteamAPI_ISteamMatchmaking_GetFavoriteGameCount");
             bindFunc(cast(void**)&SteamAPI_ISteamMatchmaking_GetFavoriteGame, "SteamAPI_ISteamMatchmaking_GetFavoriteGame");
@@ -587,6 +589,7 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_SetReturnChildren, "SteamAPI_ISteamUGC_SetReturnChildren");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_SetReturnAdditionalPreviews, "SteamAPI_ISteamUGC_SetReturnAdditionalPreviews");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_SetReturnTotalOnly, "SteamAPI_ISteamUGC_SetReturnTotalOnly");
+            bindFunc(cast(void**)&SteamAPI_ISteamUGC_SetReturnPlaytimeStats, "SteamAPI_ISteamUGC_SetReturnPlaytimeStats");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_SetLanguage, "SteamAPI_ISteamUGC_SetLanguage");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_SetAllowCachedResponse, "SteamAPI_ISteamUGC_SetAllowCachedResponse");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_SetCloudFileNameFilter, "SteamAPI_ISteamUGC_SetCloudFileNameFilter");
@@ -631,6 +634,8 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_StartPlaytimeTracking, "SteamAPI_ISteamUGC_StartPlaytimeTracking");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_StopPlaytimeTracking, "SteamAPI_ISteamUGC_StopPlaytimeTracking");
             bindFunc(cast(void**)&SteamAPI_ISteamUGC_StopPlaytimeTrackingForAllItems, "SteamAPI_ISteamUGC_StopPlaytimeTrackingForAllItems");
+            bindFunc(cast(void**)&SteamAPI_ISteamUGC_AddDependency, "SteamAPI_ISteamUGC_AddDependency");
+            bindFunc(cast(void**)&SteamAPI_ISteamUGC_RemoveDependency, "SteamAPI_ISteamUGC_RemoveDependency");
 
             bindFunc(cast(void**)&SteamAPI_ISteamAppList_GetNumInstalledApps, "SteamAPI_ISteamAppList_GetNumInstalledApps");
             bindFunc(cast(void**)&SteamAPI_ISteamAppList_GetInstalledApps, "SteamAPI_ISteamAppList_GetInstalledApps");
@@ -674,6 +679,7 @@ final class DerelictSteamworksLoader : SharedLibLoader
             bindFunc(cast(void**)&SteamAPI_ISteamHTMLSurface_JSDialogResponse, "SteamAPI_ISteamHTMLSurface_JSDialogResponse");
             bindFunc(cast(void**)&SteamAPI_ISteamInventory_GetResultStatus, "SteamAPI_ISteamInventory_GetResultStatus");
             bindFunc(cast(void**)&SteamAPI_ISteamInventory_GetResultItems, "SteamAPI_ISteamInventory_GetResultItems");
+            bindFunc(cast(void**)&SteamAPI_ISteamInventory_GetResultItemProperty, "SteamAPI_ISteamInventory_GetResultItemProperty");
             bindFunc(cast(void**)&SteamAPI_ISteamInventory_GetResultTimestamp, "SteamAPI_ISteamInventory_GetResultTimestamp");
             bindFunc(cast(void**)&SteamAPI_ISteamInventory_CheckResultSteamID, "SteamAPI_ISteamInventory_CheckResultSteamID");
             bindFunc(cast(void**)&SteamAPI_ISteamInventory_DestroyResult, "SteamAPI_ISteamInventory_DestroyResult");
@@ -699,6 +705,9 @@ final class DerelictSteamworksLoader : SharedLibLoader
 
             bindFunc(cast(void**)&SteamAPI_ISteamVideo_GetVideoURL, "SteamAPI_ISteamVideo_GetVideoURL");
             bindFunc(cast(void**)&SteamAPI_ISteamVideo_IsBroadcasting, "SteamAPI_ISteamVideo_IsBroadcasting");
+            bindFunc(cast(void**)&SteamAPI_ISteamVideo_GetOPFSettings, "SteamAPI_ISteamVideo_GetOPFSettings");
+            bindFunc(cast(void**)&SteamAPI_ISteamVideo_GetOPFStringForApp, "SteamAPI_ISteamVideo_GetOPFStringForApp");
+
             bindFunc(cast(void**)&SteamAPI_ISteamGameServer_InitGameServer, "SteamAPI_ISteamGameServer_InitGameServer");
             bindFunc(cast(void**)&SteamAPI_ISteamGameServer_SetProduct, "SteamAPI_ISteamGameServer_SetProduct");
             bindFunc(cast(void**)&SteamAPI_ISteamGameServer_SetGameDescription, "SteamAPI_ISteamGameServer_SetGameDescription");

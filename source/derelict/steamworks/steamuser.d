@@ -93,3 +93,5 @@ struct StoreAuthURLResponse_t
     enum { k_iCallback = k_iSteamUserCallbacks + 65 };
     char[512] m_szURL;
 }
+
+static immutable const(char)* STEAMUTILS_INTERFACE_VERSION = "SteamUtils009";
