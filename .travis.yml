@@ -11,8 +11,6 @@ d:
   - ldc
   - ldc-1.7.0
   - ldc-1.6.0
-  - gdc #-4.9.3
-  - gdc-4.9.0
 
 script:
   - dub build --compiler=$DC || exit 1
