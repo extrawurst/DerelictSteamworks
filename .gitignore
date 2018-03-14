@@ -5,4 +5,5 @@ __dummy.html
 *.obj
 dub.selections.json
 dub.userprefs
+libsteam_api.dylib
 lib/
