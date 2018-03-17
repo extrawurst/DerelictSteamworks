@@ -3,11 +3,14 @@ language: d
 sudo: false
 
 d:
+  - dmd-nightly
+  - dmd-beta
   - dmd
   - dmd-2.078.3
   - dmd-2.077.1
   - dmd-2.076.1
   - dmd-2.075.1
+  - ldc-beta
   - ldc
   - ldc-1.7.0
   - ldc-1.6.0
